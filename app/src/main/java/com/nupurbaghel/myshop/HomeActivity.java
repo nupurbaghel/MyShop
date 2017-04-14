@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.Iterator;
 import java.util.Map;
 
+import static android.R.attr.button;
 import static com.nupurbaghel.myshop.R.id.gridLayout;
 import static com.nupurbaghel.myshop.R.id.linearLayout;
 
@@ -36,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
     int count = 0;
     private Firebase mRef;
     GridLayout gridLayout;
-    Map<String, Map<String, Map<String, String>>> map;
+    static Map<String, Map<String, Map<String, String>>> map;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -71,6 +73,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         gridLayout=(GridLayout) findViewById(R.id.gridLayout);
+        gridLayout.removeAllViews();
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
 
         final ValueEventListener valueEventListener = mRef.addValueEventListener(new ValueEventListener() {
@@ -116,11 +119,21 @@ public class HomeActivity extends AppCompatActivity {
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef;
+        gridLayout.setColumnCount(2);
 
+        float paading = getResources().getDimension(R.dimen.paading);
+        if(count%2==0) {
+            gridLayout.setRowCount(count / 2);
+        }
+        else{
+            gridLayout.setRowCount((count / 2) + 1) ;
+        }
 
         for(int i=1;i<=count;i++) {
             LinearLayout parent = new LinearLayout(getApplicationContext());
             TextView tv1 = new TextView(getApplicationContext());
+            tv1.setGravity(Gravity.CENTER);
+            parent.setId(i+100);
 
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.VERTICAL);
@@ -133,6 +146,7 @@ public class HomeActivity extends AppCompatActivity {
 
             float width = getResources().getDimension(R.dimen.chart_width);
             iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
+            iv.setPadding((int)paading,(int)paading,(int)paading,(int)paading);
 
             Glide.with(getApplicationContext() /* context */)
                     .using(new FirebaseImageLoader())
@@ -146,7 +160,24 @@ public class HomeActivity extends AppCompatActivity {
             parent.addView(iv);
             parent.addView(tv1);
 
+
+            gridLayout.setPadding((int)paading,(int)paading,(int)paading,(int)paading);
             gridLayout.addView(parent);
+
+            final int finalI = i;
+            parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.i("AppDebug","button clicked");
+                    Intent x= new Intent(HomeActivity.this,scrollActivity.class);
+                    Log.i("ButtonHome", String.valueOf(finalI));
+                    x.putExtra("button",String.valueOf(finalI));
+                    startActivity(x);
+
+                }
+            });
         }
     }
+
+
 }

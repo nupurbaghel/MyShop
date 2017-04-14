@@ -1,52 +1,115 @@
 package com.nupurbaghel.myshop;
 
+import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.firebase.client.collection.LLRBNode;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.Iterator;
+import java.util.Map;
+
+import static android.R.attr.button;
 import static android.R.attr.width;
+import static com.nupurbaghel.myshop.HomeActivity.map;
 
 public class scrollActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
+    int count=0;
+    int categoryNo;
     private Firebase mRef;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll);
+
+        categoryNo = getIntent().getIntExtra("button",1);
+        Log.i("Category No", String.valueOf(categoryNo));
+
+        mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
+        final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                findCount(dataSnapshot);
+                displayInLayout();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
 
         linearLayout=(LinearLayout) findViewById(R.id.linearLayout);
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("categories/electric2.jpg");
 
+    }
 
-        for(int i=0;i<=5;i++) {
+
+    public void findCount(DataSnapshot dataSnapshot){
+        Iterator<Map.Entry<String, Map<String, Map<String, String>>>> iterator = map.entrySet().iterator();
+        while (iterator.hasNext()) {
+            Log.i("Level 0",Integer.toString(count));
+            Map.Entry<String, Map<String, Map<String, String>>> pair = iterator.next();
+            Log.i("Printing key",pair.getKey());
+            if (pair.getKey() == "category") {
+
+                Iterator<Map.Entry<String, Map<String, String>>> it2 = pair.getValue().entrySet().iterator();
+                while (it2.hasNext()) {
+                    Map.Entry<String, Map<String, String>> pair2 = it2.next();
+                    if (pair2.getKey().contains(categoryNo+"-")) {
+                        count++;
+                    }
+                }
+            }
+        }
+        Log.i("Subcategories",Integer.toString(count));
+
+
+    }
+
+    public void displayInLayout(){
+        FirebaseStorage storage= FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+        StorageReference imagesRef;
+
+        for(int i=1;i<=count;i++) {
             LinearLayout parent = new LinearLayout(getApplicationContext());
 
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.HORIZONTAL);
 
-//children of parent linearlayout
+            String imageURL= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("img");
+
+            imagesRef = storageRef.child(imageURL);
+            Log.i("Printing image url",imageURL);
+            //tv1.setText(map.get("category").get(Integer.toString(i)).get("title"));
 
             ImageView iv = new ImageView(getApplicationContext());
 
-            //Picasso.with(getApplicationContext()).load("https://firebasestorage.googleapis.com/v0/b/my-shop-93286.appspot.com/o/Plastics%2FBuckets%20and%20mugs%2FMain.jpg?alt=media&token=3ab3cbea-39b6-4ab9-88a6-6edb3389fec3").into(iv);
             LinearLayout layout2 = new LinearLayout(getApplicationContext());
 
             layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -93,6 +156,5 @@ public class scrollActivity extends AppCompatActivity {
 
             linearLayout.addView(parent);
         }
-
     }
 }

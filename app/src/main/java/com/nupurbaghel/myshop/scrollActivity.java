@@ -29,6 +29,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static android.R.attr.button;
+import static android.R.attr.centerX;
+import static android.R.attr.centerY;
 import static android.R.attr.width;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 
@@ -129,28 +131,20 @@ public class scrollActivity extends AppCompatActivity {
             TextView tv3 = new TextView(getApplicationContext());
             TextView tv4 = new TextView(getApplicationContext());
 
-            tv1.setText("Hello new");
-            tv2.setText("Hello there");
-            tv3.setText("Hello yay");
-            tv4.setText("get lost");
+            String title= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("title");
+            tv1.setText(title);
+            String decs= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("descr");
+            tv2.setText(decs);
             tv1.setTextColor(Color.BLACK);
+            tv1.setTextSize(30);
             tv2.setTextColor(Color.BLACK);
-            tv3.setTextColor(Color.BLACK);
-            tv4.setTextColor(Color.BLACK);
-
-
-            /*String uri = "@drawable/electric";
-            Log.i("trying to access", uri);
-            int imageResource = getResources().getIdentifier(uri, null, getPackageName());
-            Drawable res = getResources().getDrawable(imageResource);
-            iv.setImageDrawable(res);
-            */
 
             layout2.addView(tv1);
             layout2.addView(tv2);
-            layout2.addView(tv3);
-            layout2.addView(tv4);
-
+            //layout2.addView(tv3);
+            //layout2.addView(tv4);
+            layout2.setGravity(centerY);
+            layout2.setPadding(50,50,50,50);
             parent.addView(iv);
             parent.addView(layout2);
 

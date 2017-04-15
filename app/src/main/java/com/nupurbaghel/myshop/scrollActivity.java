@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -114,7 +115,6 @@ public class scrollActivity extends AppCompatActivity {
             //tv1.setText(map.get("category").get(Integer.toString(i)).get("title"));
 
             ImageView iv = new ImageView(getApplicationContext());
-
             LinearLayout layout2 = new LinearLayout(getApplicationContext());
 
             layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
@@ -144,8 +144,6 @@ public class scrollActivity extends AppCompatActivity {
 
             layout2.addView(tv1);
             layout2.addView(tv2);
-            //layout2.addView(tv3);
-            //layout2.addView(tv4);
             layout2.setGravity(layout_centerVertical);
             layout2.setPadding(50,50,50,50);
             parent.addView(iv);

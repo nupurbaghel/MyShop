@@ -1,11 +1,14 @@
 package com.nupurbaghel.myshop;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,10 +31,11 @@ import static com.nupurbaghel.myshop.HomeActivity.map;
 
 public class ProductActivity extends AppCompatActivity {
 
-    LinearLayout linearLayout;
+    LinearLayout linearLayout2;
     int categoryNo,subCategoryNo;
+    String imageURL;
     private Firebase mRef;
-    int productNo=1;
+    String[] prodIds;
     int count;
 
 
@@ -40,7 +44,10 @@ public class ProductActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
 
-        linearLayout= (LinearLayout) findViewById(R.id.linearLayout);
+        linearLayout2= (LinearLayout) findViewById(R.id.linearLayoutProduct);
+        if(linearLayout2==null){
+            Log.i("Linear layout","Not found");
+        }
 
         subCategoryNo = getIntent().getIntExtra("subCategoryNo",1);
         //Log.i("SubcatInProduct", String.valueOf(subCategoryNo));
@@ -62,7 +69,6 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
 
-        linearLayout=(LinearLayout) findViewById(R.id.linearLayout);
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("categories/electric2.jpg");
@@ -73,74 +79,73 @@ public class ProductActivity extends AppCompatActivity {
     public void findCount(DataSnapshot dataSnapshot){
         count=Integer.parseInt( map.get("category").get(categoryNo+"-"+subCategoryNo).get("total"));
         Log.i("TotalCountoOfProducts",Integer.toString(count));
-
+        prodIds=map.get("category").get(categoryNo+"-"+subCategoryNo).get("products").split(",");
+        for(String w:prodIds){
+            Log.i("ProductIds",w);
+        }
     }
 
     public void displayInLayout(){
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef;
-        productNo=1;        //Current product no in json data
 
-        for(int i=1;i<=count;i++) {
+        for(String w:prodIds) {
+
+
             LinearLayout parent = new LinearLayout(getApplicationContext());
-            String subCategoryOfCurrentItem=map.get("product").get("1").get("title");
-            while(!subCategoryOfCurrentItem.equals(categoryNo+"-"+subCategoryNo)){
-               productNo++;
-                subCategoryOfCurrentItem=map.get("product").get(Integer.toString(productNo)).get("subcategory");
-            }
-            Log.i("subcatfff",subCategoryOfCurrentItem);
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.HORIZONTAL);
-            Log.i("ProdNo",Integer.toString(productNo));
-
-            String imageURL= map.get("product").get(categoryNo+"-"+Integer.toString(productNo)).get("img");
-
-            imagesRef = storageRef.child(imageURL);
-            Log.i("Printing image url",imageURL);
-            ImageView iv = new ImageView(getApplicationContext());
 
             LinearLayout layout2 = new LinearLayout(getApplicationContext());
-
             layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             layout2.setOrientation(LinearLayout.VERTICAL);
 
+            imageURL= map.get("product").get(w).get("img");
+            imagesRef = storageRef.child(imageURL);
+            Log.i("Printing image url",imageURL);
+            ImageView iv = new ImageView(getApplicationContext());
             float width = getResources().getDimension(R.dimen.chart_width);
             iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
-
             Glide.with(this )
                     .using(new FirebaseImageLoader())
                     .load(imagesRef)
                     .into(iv);
-//children of layout2 LinearLayout
-            Log.i("trying to access", "yay");
-            TextView tv1 = new TextView(getApplicationContext());
-            TextView tv2 = new TextView(getApplicationContext());
-            TextView tv3 = new TextView(getApplicationContext());
-            TextView tv4 = new TextView(getApplicationContext());
 
-            String title= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("title");
-            tv1.setText(title);
-            String decs= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("descr");
-            tv2.setText(decs);
-            tv1.setTextColor(Color.BLACK);
-            tv1.setTextSize(30);
-            tv2.setTextColor(Color.BLACK);
+            TextView name = new TextView(getApplicationContext());
+            TextView company = new TextView(getApplicationContext());
+            TextView price = new TextView(getApplicationContext());
+            TextView discount = new TextView(getApplicationContext());
+            Button btn = new Button(getApplicationContext());
 
-            layout2.addView(tv1);
-            layout2.addView(tv2);
-            //layout2.addView(tv3);
-            //layout2.addView(tv4);
+            String name_= map.get("product").get(w).get("name");
+            String company_= map.get("product").get(w).get("company");
+            String price_= map.get("product").get(w).get("price");
+            String discount_= map.get("product").get(w).get("discount");
+
+            name.setText("Product : " +name_);
+            company.setText("Company : " +company_);
+            price.setText("Price : "+price_);
+            discount.setText("Discount : "+discount_);
+            name.setTextColor(Color.BLACK);
+            company.setTextColor(Color.BLACK);
+            price.setTextColor(Color.BLACK);
+            discount.setTextColor(Color.BLACK);
+            btn.setText("Add to cart");
+
+            layout2.addView(name);
+            layout2.addView(company);
+            layout2.addView(price);
+            layout2.addView(discount);
+            layout2.addView(btn);
             layout2.setGravity(layout_centerVertical);
             layout2.setPadding(50,50,50,50);
             parent.addView(iv);
             parent.addView(layout2);
+            Log.i("Adding layout",w);
 
-            linearLayout.addView(parent);
+            linearLayout2.addView(parent);
 
-            productNo++;
         }
-
-
     }
 }

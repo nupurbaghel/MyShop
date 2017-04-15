@@ -171,7 +171,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.i("AppDebug","button clicked");
                     Intent x= new Intent(HomeActivity.this,scrollActivity.class);
                     Log.i("ButtonHome", String.valueOf(finalI));
-                    x.putExtra("button",String.valueOf(finalI));
+                    x.putExtra("categoryNo",String.valueOf(finalI));
                     startActivity(x);
 
                 }

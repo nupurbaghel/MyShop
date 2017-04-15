@@ -1,14 +1,10 @@
 package com.nupurbaghel.myshop;
 
-import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,38 +15,38 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.firebase.client.collection.LLRBNode;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
 
-import static android.R.attr.button;
-import static android.R.attr.centerX;
-import static android.R.attr.centerY;
-import static android.R.attr.layout_centerHorizontal;
-import static android.R.attr.layout_centerInParent;
 import static android.R.attr.layout_centerVertical;
-import static android.R.attr.width;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 
-public class scrollActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
-    int count=0;
-    int categoryNo;
+    int categoryNo,subCategoryNo;
     private Firebase mRef;
+    int productNo=1;
+    int count;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scroll);
+        setContentView(R.layout.activity_product);
 
-        categoryNo = getIntent().getIntExtra("categoryNo",1);
-        Log.i("Category No", String.valueOf(categoryNo));
+        linearLayout= (LinearLayout) findViewById(R.id.linearLayout);
+
+        subCategoryNo = getIntent().getIntExtra("subCategoryNo",1);
+        //Log.i("SubcatInProduct", String.valueOf(subCategoryNo));
+
+        categoryNo = getIntent().getIntExtra("button",1);
+        //Log.i("Category No", String.valueOf(categoryNo));
 
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
         final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
@@ -75,24 +71,8 @@ public class scrollActivity extends AppCompatActivity {
 
 
     public void findCount(DataSnapshot dataSnapshot){
-        Iterator<Map.Entry<String, Map<String, Map<String, String>>>> iterator = map.entrySet().iterator();
-        while (iterator.hasNext()) {
-            Log.i("Level 0",Integer.toString(count));
-            Map.Entry<String, Map<String, Map<String, String>>> pair = iterator.next();
-            Log.i("Printing key",pair.getKey());
-            if (pair.getKey() == "category") {
-
-                Iterator<Map.Entry<String, Map<String, String>>> it2 = pair.getValue().entrySet().iterator();
-                while (it2.hasNext()) {
-                    Map.Entry<String, Map<String, String>> pair2 = it2.next();
-                    if (pair2.getKey().contains(categoryNo+"-")) {
-                        count++;
-                    }
-                }
-            }
-        }
-        Log.i("Subcategories",Integer.toString(count));
-
+        count=Integer.parseInt( map.get("category").get(categoryNo+"-"+subCategoryNo).get("total"));
+        Log.i("TotalCountoOfProducts",Integer.toString(count));
 
     }
 
@@ -100,19 +80,24 @@ public class scrollActivity extends AppCompatActivity {
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef;
+        productNo=1;        //Current product no in json data
 
         for(int i=1;i<=count;i++) {
             LinearLayout parent = new LinearLayout(getApplicationContext());
-
+            String subCategoryOfCurrentItem=map.get("product").get("1").get("title");
+            while(!subCategoryOfCurrentItem.equals(categoryNo+"-"+subCategoryNo)){
+               productNo++;
+                subCategoryOfCurrentItem=map.get("product").get(Integer.toString(productNo)).get("subcategory");
+            }
+            Log.i("subcatfff",subCategoryOfCurrentItem);
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.HORIZONTAL);
+            Log.i("ProdNo",Integer.toString(productNo));
 
-            String imageURL= map.get("category").get(categoryNo+"-"+Integer.toString(i)).get("img");
+            String imageURL= map.get("product").get(categoryNo+"-"+Integer.toString(productNo)).get("img");
 
             imagesRef = storageRef.child(imageURL);
             Log.i("Printing image url",imageURL);
-            //tv1.setText(map.get("category").get(Integer.toString(i)).get("title"));
-
             ImageView iv = new ImageView(getApplicationContext());
 
             LinearLayout layout2 = new LinearLayout(getApplicationContext());
@@ -123,7 +108,7 @@ public class scrollActivity extends AppCompatActivity {
             float width = getResources().getDimension(R.dimen.chart_width);
             iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
 
-            Glide.with(this /* context */)
+            Glide.with(this )
                     .using(new FirebaseImageLoader())
                     .load(imagesRef)
                     .into(iv);
@@ -153,20 +138,9 @@ public class scrollActivity extends AppCompatActivity {
 
             linearLayout.addView(parent);
 
-            final int finalI = i;
-            parent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.i("AppDebug","Some subcatclicked");
-                    Intent x= new Intent(scrollActivity.this,ProductActivity.class);
-                    Log.i("SubcatInScroll", String.valueOf(finalI));
-                    x.putExtra("subCategoryNo",finalI);
-                    x.putExtra("categoryNo",String.valueOf(categoryNo));
-                    startActivity(x);
-
-                }
-            });
-
+            productNo++;
         }
+
+
     }
 }

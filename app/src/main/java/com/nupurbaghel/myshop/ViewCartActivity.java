@@ -38,7 +38,7 @@ import static com.nupurbaghel.myshop.HomeActivity.map;
 
 public class ViewCartActivity extends AppCompatActivity {
 
-    HashMap<String,String> mycart= new HashMap();
+    static Map<String,String> mycart= new HashMap();
     LinearLayout linearLayout;
     float TotalCost;
 
@@ -46,7 +46,7 @@ public class ViewCartActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu,menu);
+        menuInflater.inflate(R.menu.cart_menu,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -60,7 +60,10 @@ public class ViewCartActivity extends AppCompatActivity {
                 Log.i("Clicked","logout");
                 Logout();
                 return true;
-
+            case  R.id.checkOut:
+                startActivity(new Intent(this,CheckOutActivity.class));
+            case  R.id.home:
+                startActivity(new Intent(this,HomeActivity.class));
             default:return false;
         }
 
@@ -199,6 +202,8 @@ public class ViewCartActivity extends AppCompatActivity {
             tv1.setTextColor(Color.BLACK);
             tv1.setTextSize(25);
             tv2.setTextColor(Color.BLACK);
+            tv3.setTextColor(Color.BLACK);
+            tv4.setTextColor(Color.BLACK);
             tv5.setTextColor(Color.BLACK);
 
             Button btn1 = new Button(getApplicationContext());

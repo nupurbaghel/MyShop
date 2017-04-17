@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+<<<<<<< HEAD
 <item android:id="@+id/logout" android:title="LogOut"/>
 <item android:id="@+id/mycart" android:title="View Cart"/>
+=======
+    <item android:id="@+id/logout" android:title="LogOut"/>
+    <item android:id="@+id/mycart" android:title="View Cart"/>
+    <item android:id="@+id/checkOut" android:title="Check Out"/>
+>>>>>>> b9d2a45da62c591322884bb0db83cb32073ff4e7
 </menu>

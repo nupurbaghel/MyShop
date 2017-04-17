@@ -21,7 +21,9 @@
         <activity android:name=".AccountActivity" />
         <activity android:name=".HomeActivity" />
         <activity android:name=".scrollActivity" />
-        <activity android:name=".ProductActivity"></activity>
+        <activity android:name=".ProductActivity" />
+        <activity android:name=".ViewCartActivity" />
+        <activity android:name=".CheckOutActivity"></activity>
     </application>
 
 </manifest>

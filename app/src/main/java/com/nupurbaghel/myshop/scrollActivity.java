@@ -8,6 +8,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,6 +25,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.firebase.client.collection.LLRBNode;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
@@ -46,6 +50,37 @@ public class scrollActivity extends AppCompatActivity {
     private Firebase mRef;
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        super.onOptionsItemSelected(item);
+        switch (item.getItemId()) {
+            case R.id.logout:
+                Log.i("Clicked", "logout");
+                Logout();
+                return true;
+            case R.id.mycart:
+                Log.i("Clicked", "View Cart");
+                startActivity(new Intent(scrollActivity.this, ViewCartActivity.class));
+                return true;
+            case R.id.checkOut:
+                Log.i("Clicked", "Check Cart");
+                startActivity(new Intent(scrollActivity.this, CheckOutActivity.class));
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scroll);
@@ -57,6 +92,7 @@ public class scrollActivity extends AppCompatActivity {
         final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                linearLayout.removeAllViews();
                 findCount(dataSnapshot);
                 displayInLayout();
             }
@@ -76,6 +112,7 @@ public class scrollActivity extends AppCompatActivity {
 
 
     public void findCount(DataSnapshot dataSnapshot){
+        count=0;
         Iterator<Map.Entry<String, Map<String, Map<String, String>>>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
             Log.i("Level 0",Integer.toString(count));
@@ -166,5 +203,10 @@ public class scrollActivity extends AppCompatActivity {
             });
 
         }
+    }
+
+    public void Logout(){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this,MainActivity.class));
     }
 }

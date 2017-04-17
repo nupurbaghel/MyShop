@@ -73,9 +73,18 @@ public class ProductActivity extends AppCompatActivity {
 
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
+<<<<<<< HEAD
                 startActivity(new Intent(this,ViewCartActivity.class));
                 return true;
 
+=======
+                startActivity(new Intent(ProductActivity.this,ViewCartActivity.class));
+                return true;
+            case R.id.checkOut:
+                Log.i("Clicked","Check Out");
+                startActivity(new Intent(ProductActivity.this,CheckOutActivity.class));
+                return true;
+>>>>>>> b9d2a45da62c591322884bb0db83cb32073ff4e7
             default:return false;
         }
 
@@ -105,6 +114,7 @@ public class ProductActivity extends AppCompatActivity {
         final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                linearLayout2.removeAllViews();
                 findCount(dataSnapshot);
                 displayInLayout();
             }

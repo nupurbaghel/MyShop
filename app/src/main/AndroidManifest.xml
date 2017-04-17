@@ -23,7 +23,8 @@
         <activity android:name=".scrollActivity" />
         <activity android:name=".ProductActivity" />
         <activity android:name=".ViewCartActivity" />
-        <activity android:name=".CheckOutActivity"></activity>
+        <activity android:name=".CheckOutActivity" />
+        <activity android:name=".AllOrders"></activity>
     </application>
 
 </manifest>

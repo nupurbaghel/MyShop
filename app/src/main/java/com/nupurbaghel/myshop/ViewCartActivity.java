@@ -40,6 +40,8 @@ public class ViewCartActivity extends AppCompatActivity {
 
     static Map<String,String> mycart= new HashMap();
     LinearLayout linearLayout;
+    String netprice;
+    static String netTotal;
     float TotalCost;
 
     @Override
@@ -62,8 +64,14 @@ public class ViewCartActivity extends AppCompatActivity {
                 return true;
             case  R.id.checkOut:
                 startActivity(new Intent(this,CheckOutActivity.class));
+                return true;
             case  R.id.home:
                 startActivity(new Intent(this,HomeActivity.class));
+                return true;
+            case R.id.allOrders:
+                Log.i("Clicked","All orders");
+                startActivity(new Intent(ViewCartActivity.this,AllOrders.class));
+                return true;
             default:return false;
         }
 
@@ -196,8 +204,10 @@ public class ViewCartActivity extends AppCompatActivity {
             String total = findCost(price,discount,quantity);
             String cost = "Per item = Rs "+ price +" -" +discount+"%  = Rs"+ total;
             tv4.setText(cost);
-            String netprice = "Net Price: Rs " + Float.toString(Float.parseFloat(total) * Float.parseFloat(quantity));
+            netprice = "Net Price: Rs " + Float.toString(Float.parseFloat(total) * Float.parseFloat(quantity));
             tv5.setText(netprice);
+
+            netTotal=Float.toString(Float.parseFloat(total) * Float.parseFloat(quantity));
 
             tv1.setTextColor(Color.BLACK);
             tv1.setTextSize(25);

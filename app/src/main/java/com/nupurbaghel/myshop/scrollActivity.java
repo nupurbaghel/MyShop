@@ -75,6 +75,10 @@ public class scrollActivity extends AppCompatActivity {
                 Log.i("Clicked", "Check Cart");
                 startActivity(new Intent(scrollActivity.this, CheckOutActivity.class));
                 return true;
+            case R.id.allOrders:
+                Log.i("Clicked","All orders");
+                startActivity(new Intent(scrollActivity.this,AllOrders.class));
+                return true;
             default:
                 return false;
         }

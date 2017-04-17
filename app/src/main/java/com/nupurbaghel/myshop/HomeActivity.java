@@ -58,7 +58,14 @@ public class HomeActivity extends AppCompatActivity {
                 Log.i("Clicked","logout");
                 Logout();
                 return true;
-
+            case R.id.mycart:
+                Log.i("Clicked","View Cart");
+                startActivity(new Intent(HomeActivity.this,ViewCartActivity.class));
+                return true;
+            case R.id.checkOut:
+                Log.i("Clicked","Check Out");
+                startActivity(new Intent(HomeActivity.this,CheckOutActivity.class));
+                return true;
             default:return false;
         }
 
@@ -71,7 +78,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
+        Log.i("Entered On create","a");
         gridLayout=(GridLayout) findViewById(R.id.gridLayout);
         gridLayout.removeAllViews();
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
@@ -79,13 +86,14 @@ public class HomeActivity extends AppCompatActivity {
         final ValueEventListener valueEventListener = mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.i("onDataChange","1");
                 findCount(dataSnapshot);
                 displayInGridView();
             }
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Log.i("onCancelled","2");
             }
         });
     }
@@ -95,6 +103,8 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void findCount(DataSnapshot dataSnapshot){
+        count=0;
+        gridLayout.removeAllViews();
         map = dataSnapshot.getValue(Map.class);
         Iterator<Map.Entry<String, Map<String, Map<String, String>>>> iterator = map.entrySet().iterator();
         while (iterator.hasNext()) {
@@ -133,7 +143,6 @@ public class HomeActivity extends AppCompatActivity {
             LinearLayout parent = new LinearLayout(getApplicationContext());
             TextView tv1 = new TextView(getApplicationContext());
             tv1.setGravity(Gravity.CENTER);
-            parent.setId(i+100);
 
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.VERTICAL);

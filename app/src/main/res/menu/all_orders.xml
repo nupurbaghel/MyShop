@@ -3,5 +3,4 @@
     <item android:id="@+id/logout" android:title="LogOut"/>
     <item android:id="@+id/mycart" android:title="View Cart"/>
     <item android:id="@+id/checkOut" android:title="Check Out"/>
-    <item android:id="@+id/allOrders" android:title="All Orders"/>
 </menu>

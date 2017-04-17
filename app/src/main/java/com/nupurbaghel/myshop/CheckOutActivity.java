@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +34,7 @@ import java.util.Map;
 
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
+import static com.nupurbaghel.myshop.ViewCartActivity.netTotal;
 
 public class CheckOutActivity extends AppCompatActivity {
     EditText name,address,phone,email;
@@ -38,6 +42,42 @@ public class CheckOutActivity extends AppCompatActivity {
     Button checko;
     FirebaseUser currentFirebaseUser;
     private Firebase mref2;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        MenuInflater menuInflater=getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu,menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        super.onOptionsItemSelected(item);
+        switch(item.getItemId()){
+            case R.id.logout:
+                Log.i("Clicked","logout");
+                Logout();
+                return true;
+            case R.id.mycart:
+                Log.i("Clicked","View Cart");
+                startActivity(new Intent(CheckOutActivity.this,ViewCartActivity.class));
+                return true;
+            case R.id.checkOut:
+                Log.i("Clicked","Check Out");
+                startActivity(new Intent(CheckOutActivity.this,CheckOutActivity.class));
+                return true;
+            case R.id.allOrders:
+                Log.i("Clicked","All orders");
+                startActivity(new Intent(CheckOutActivity.this,AllOrders.class));
+                return true;
+
+            default:return false;
+        }
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +93,8 @@ public class CheckOutActivity extends AppCompatActivity {
             builder1.setPositiveButton("Ok",
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
-                            startActivity(new Intent(CheckOutActivity.this,HomeActivity.class));
+                            CheckOutActivity.this.finish();
+                            //startActivity(new Intent(CheckOutActivity.this,HomeActivity.class));
                         }
                     });
 
@@ -154,6 +195,7 @@ public class CheckOutActivity extends AppCompatActivity {
         mymap.put("prodNos",prodNos);
         mymap.put("prodFreq",prodFreqs);
         mymap.put("userId",currentFirebaseUser.getUid());
+        mymap.put("netPrice",netTotal);
         mymap.put("dateTime",currentDateTimeString);
 
         mref2.push().setValue(mymap);
@@ -191,5 +233,10 @@ public class CheckOutActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public void Logout(){
+        FirebaseAuth.getInstance().signOut();
+        startActivity(new Intent(this,MainActivity.class));
     }
 }

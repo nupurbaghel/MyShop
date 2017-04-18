@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -96,6 +97,8 @@ public class ViewCartActivity extends AppCompatActivity {
         else{
             displayTotal();
         }
+
+        setupToolbar();
     }
 
 
@@ -299,5 +302,12 @@ public class ViewCartActivity extends AppCompatActivity {
                 Toast.makeText(ViewCartActivity.this, "Reduced Qty in Cart", Toast.LENGTH_SHORT).show();
             }
         };
+    }
+
+    void setupToolbar(){
+        Toolbar toolbar;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 }

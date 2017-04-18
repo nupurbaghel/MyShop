@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string-array name="filter_price">
+        <item>Lowest First</item>
+        <item>Highest First</item>
+    </string-array>
+
+    <string-array name="filter_discount">
+        <item>More</item>
+        <item>Less</item>
+    </string-array>
+
+    <string-array name="filter_quality">
+        <item>excellent</item>
+        <item>medium</item>
+        <item>average</item>
+    </string-array>
+
+    <string-array name="filter_color">
+        <item>red</item>
+        <item>yellow</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>orange</item>
+        <item>white</item>
+        <item>grey</item>
+        <item>pink</item>
+    </string-array>
+
+    <string-array name="filter_company">
+        <item>nayassa</item>
+        <item>flora</item>
+        <item>cello</item>
+        <item>sonal</item>
+        <item>tupperware</item>
+        <item>signoraware</item>
+    </string-array>
+
+</resources>

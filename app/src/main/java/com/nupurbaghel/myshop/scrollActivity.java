@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -17,6 +19,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
@@ -112,6 +115,7 @@ public class scrollActivity extends AppCompatActivity {
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("categories/electric2.jpg");
 
+        setupToolbar();
     }
 
 
@@ -201,6 +205,7 @@ public class scrollActivity extends AppCompatActivity {
                     Log.i("SubcatInScroll", String.valueOf(finalI));
                     x.putExtra("subCategoryNo",finalI);
                     x.putExtra("categoryNo",String.valueOf(categoryNo));
+                    Toast.makeText(scrollActivity.this, "Chose filters from left menu", Toast.LENGTH_SHORT).show();
                     startActivity(x);
 
                 }
@@ -212,5 +217,12 @@ public class scrollActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+    }
+
+    void setupToolbar(){
+        Toolbar toolbar;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 }

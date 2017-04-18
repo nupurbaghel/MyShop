@@ -4,8 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
 import android.view.Menu;
@@ -13,9 +17,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +57,11 @@ public class ProductActivity extends AppCompatActivity {
     private Firebase mRef;
     String[] prodIds;
     int count;
+    Spinner price,discount,quality,company,color;
+    private DrawerLayout mDrawerLayout;
+    android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
+    ActionBar actionBar;
+    Toolbar toolbar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -70,21 +81,18 @@ public class ProductActivity extends AppCompatActivity {
                 Log.i("Clicked","logout");
                 Logout();
                 return true;
-
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
-<<<<<<< HEAD
-                startActivity(new Intent(this,ViewCartActivity.class));
-                return true;
-
-=======
                 startActivity(new Intent(ProductActivity.this,ViewCartActivity.class));
                 return true;
             case R.id.checkOut:
                 Log.i("Clicked","Check Out");
                 startActivity(new Intent(ProductActivity.this,CheckOutActivity.class));
                 return true;
->>>>>>> b9d2a45da62c591322884bb0db83cb32073ff4e7
+            case R.id.allOrders:
+                Log.i("Clicked","All orders");
+                startActivity(new Intent(ProductActivity.this,AllOrders.class));
+                return true;
             default:return false;
         }
 
@@ -129,8 +137,54 @@ public class ProductActivity extends AppCompatActivity {
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef = storageRef.child("categories/electric2.jpg");
 
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        mDrawerLayout.setDrawerListener(mDrawerToggle);
+        setupToolbar();
+        setupDrawerToggle();
+        init_navdrawer();
     }
 
+    void setupToolbar(){
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
+
+    void setupDrawerToggle(){
+        mDrawerToggle = new android.support.v7.app.ActionBarDrawerToggle(this,mDrawerLayout,toolbar,R.string.app_name, R.string.app_name);
+        //This is necessary to change the icon of the Drawer Toggle upon state change.
+        mDrawerToggle.syncState();
+    }
+
+    public void init_navdrawer(){
+
+        price= (Spinner)findViewById(R.id.filter_by_price);
+        discount= (Spinner)findViewById(R.id.filter_by_discount);
+        color= (Spinner)findViewById(R.id.filter_by_color);
+        quality= (Spinner)findViewById(R.id.filter_by_quality);
+        company= (Spinner)findViewById(R.id.filter_by_company);
+
+        ArrayAdapter<CharSequence> adapter_price = ArrayAdapter.createFromResource(this, R.array.filter_price, android.R.layout.simple_spinner_item);
+        adapter_price.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        price.setAdapter(adapter_price);
+
+        ArrayAdapter<CharSequence> adapter_discount = ArrayAdapter.createFromResource(this, R.array.filter_discount, android.R.layout.simple_spinner_item);
+        adapter_discount.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
+        discount.setAdapter(adapter_discount);
+
+        ArrayAdapter<CharSequence> adapter_color = ArrayAdapter.createFromResource(this, R.array.filter_color, android.R.layout.simple_spinner_item);
+        adapter_color.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
+        color.setAdapter(adapter_color);
+
+        ArrayAdapter<CharSequence> adapter_quality = ArrayAdapter.createFromResource(this, R.array.filter_quality, android.R.layout.simple_spinner_item);
+        adapter_quality.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
+        quality.setAdapter(adapter_quality);
+
+        ArrayAdapter<CharSequence> adapter_company = ArrayAdapter.createFromResource(this, R.array.filter_company, android.R.layout.simple_spinner_item);
+        adapter_company.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
+        company.setAdapter(adapter_company);
+
+    }
 
     public void findCount(DataSnapshot dataSnapshot){
         count=Integer.parseInt( map.get("category").get(categoryNo+"-"+subCategoryNo).get("total"));

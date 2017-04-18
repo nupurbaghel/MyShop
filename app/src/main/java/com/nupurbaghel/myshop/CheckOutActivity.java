@@ -3,8 +3,10 @@ package com.nupurbaghel.myshop;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +39,7 @@ import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 import static com.nupurbaghel.myshop.ViewCartActivity.netTotal;
 
 public class CheckOutActivity extends AppCompatActivity {
+    HashMap<String,String> details=new HashMap<>();
     EditText name,address,phone,email;
     String name_,address_,phone_,email_;
     Button checko;
@@ -106,12 +109,15 @@ public class CheckOutActivity extends AppCompatActivity {
         email=(EditText) findViewById(R.id.email);
         phone=(EditText) findViewById(R.id.phone);
         checko=(Button) findViewById(R.id.checko);
+
+        getDefault(name,address,email,phone);
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
         checko.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(CheckOutActivity.this);
+                save_details(name,address,email,phone);
                 builder1.setMessage("Do you really want to place the order?");
                 builder1.setCancelable(true);
 
@@ -136,7 +142,77 @@ public class CheckOutActivity extends AppCompatActivity {
             }
         });
 
+        setupToolbar();
     }
+
+    public void save_details(EditText name,EditText address,EditText email,EditText phone){
+
+        String fname = "def_details.txt";
+        File file = new File(getDir("data", MODE_PRIVATE), fname);
+
+        details.put("name",name.getText().toString());
+        details.put("address",address.getText().toString());
+        details.put("email",email.getText().toString());
+        details.put("phone",phone.getText().toString());
+
+        try {
+            ObjectOutputStream outputStream = null;
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(details);
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public boolean getDefault(EditText name,EditText address,EditText email,EditText phone){
+        String fname = "def_details.txt";
+        File file = new File(getDir("data", MODE_PRIVATE), fname);
+
+        try {
+            if (file.exists()) {
+                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
+                details = (HashMap<String, String>) ois.readObject();
+                if(details.isEmpty()) {
+                    Log.i("Default details stored","empty");
+                    return false;
+                }
+                else{
+                    name.setText(details.get("name"));
+                    address.setText(details.get("address"));
+                    email.setText(details.get("email"));
+                    phone.setText(details.get("phone"));
+
+
+                    name.setTextColor(Color.BLACK);
+                    address.setTextColor(Color.BLACK);
+                    email.setTextColor(Color.BLACK);
+                    phone.setTextColor(Color.BLACK);
+
+
+                    Log.i("Default loaded", details.toString());
+                    return true;
+                }
+            }
+            else{
+                ObjectOutputStream outputStream = null;
+                outputStream = new ObjectOutputStream(new FileOutputStream(file));
+                outputStream.writeObject(details);
+                outputStream.flush();
+                outputStream.close();
+
+                return false;
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 
     public boolean getCart(){
         String fname = "cart.txt";
@@ -238,5 +314,12 @@ public class CheckOutActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+    }
+
+    void setupToolbar(){
+        Toolbar toolbar;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 }

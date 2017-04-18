@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -66,6 +67,10 @@ public class HomeActivity extends AppCompatActivity {
                 Log.i("Clicked","Check Out");
                 startActivity(new Intent(HomeActivity.this,CheckOutActivity.class));
                 return true;
+            case R.id.allOrders:
+                Log.i("Clicked","All orders");
+                startActivity(new Intent(HomeActivity.this,AllOrders.class));
+                return true;
             default:return false;
         }
 
@@ -96,6 +101,8 @@ public class HomeActivity extends AppCompatActivity {
                 Log.i("onCancelled","2");
             }
         });
+
+        setupToolbar();
     }
 
     public void callScrollActivity(View view){
@@ -131,7 +138,7 @@ public class HomeActivity extends AppCompatActivity {
         StorageReference imagesRef;
         gridLayout.setColumnCount(2);
 
-        float paading = getResources().getDimension(R.dimen.paading);
+        float paading = getResources().getDimension(R.dimen.padding);
         if(count%2==0) {
             gridLayout.setRowCount(count / 2);
         }
@@ -188,5 +195,10 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-
+    void setupToolbar(){
+        Toolbar toolbar;
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+    }
 }

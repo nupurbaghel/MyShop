@@ -106,6 +106,7 @@ public class AllOrders extends AppCompatActivity {
                 temp.put("netPrice",mapChild.get(orderId).get("netPrice"));
                 temp.put("prodFreq",mapChild.get(orderId).get("prodFreq"));
                 temp.put("prodNos",mapChild.get(orderId).get("prodNos"));
+                temp.put("status",mapChild.get(orderId).get("status"));
                 ordersDB.put(orderId,temp);
                 totalOrders++;
             }
@@ -126,21 +127,64 @@ public class AllOrders extends AppCompatActivity {
                 LinearLayout layout2 = new LinearLayout(getApplicationContext());
                 layout2.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
                 layout2.setOrientation(LinearLayout.VERTICAL);
+
+
+                TextView tv1 = new TextView(getApplicationContext());
+                TextView tv2 = new TextView(getApplicationContext());
+                TextView tv3 = new TextView(getApplicationContext());
+                TextView tv6 = new TextView(getApplicationContext());
+                final String status=ordersDB.get(orders.getKey()).get("status");
+
+                //TableLayout ll = new TableLayout(getApplicationContext());
+                tv1.setText("Order Id : " + orders.getKey());
+                tv1.setTextSize(20);
+                tv1.setTextColor(Color.BLACK);
+                tv2.setTextColor(Color.BLACK);
+                tv3.setTextColor(Color.BLACK);
+                tv6.setTextColor(Color.BLACK);
+
+
+                tv2.setText("Date and Time of order : " + ordersDB.get(orders.getKey()).get("dateTime"));
+                tv3.setText("Net total : Rs." + ordersDB.get(orders.getKey()).get("netPrice"));
+                tv6.setText("Status : "+ status);
+                Log.i("Status",status);
+                layout2.addView(tv1);
+
+                prodIds=ordersDB.get(orders.getKey()).get("prodNos").split(",");
+                freqs=ordersDB.get(orders.getKey()).get("prodFreq").split(",");
+
                 Button cancelOrder=new Button(this);
-                RelativeLayout.LayoutParams rel_bottone = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                cancelOrder.setLayoutParams(rel_bottone);
-                cancelOrder.setText("Cancel this Order");
+                if(status.equals("cancelled")){
+                    RelativeLayout.LayoutParams rel_bottone = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    cancelOrder.setLayoutParams(rel_bottone);
+                    cancelOrder.setText("Delete this order from list");
+                }
+                else{
+                    RelativeLayout.LayoutParams rel_bottone = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                    cancelOrder.setLayoutParams(rel_bottone);
+                    cancelOrder.setText("Cancel this order");
+                }
 
                 cancelOrder.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder builder1 = new AlertDialog.Builder(AllOrders.this);
-                        builder1.setMessage("This will permanently delete your order! Are you sure?");
+                        if (status.equals("cancelled")) {
+                            builder1.setMessage("This will permanently delete your order! Are you sure?");
+                        }
+                        else{
+                            builder1.setMessage("This will cancel your order! Are you sure?");
+                        }
                         builder1.setCancelable(true);
                         builder1.setPositiveButton("Yes",
                                 new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int id) {
-                                        mref.child(orders.getKey().toString()).removeValue();
+                                        if (status.equals("cancelled")) {
+                                            mref.child(orders.getKey().toString()).removeValue();
+                                        }
+                                        else{
+                                            mref.child(orders.getKey().toString()).child("status").setValue("cancelled");
+                                        }
                                         Intent intent = getIntent();
                                         finish();
                                         startActivity(intent);
@@ -158,24 +202,6 @@ public class AllOrders extends AppCompatActivity {
                 });
 
 
-                TextView tv1 = new TextView(getApplicationContext());
-                TextView tv2 = new TextView(getApplicationContext());
-                TextView tv3 = new TextView(getApplicationContext());
-
-                //TableLayout ll = new TableLayout(getApplicationContext());
-                tv1.setText("Order Id : " + orders.getKey());
-                tv1.setTextSize(20);
-                tv1.setTextColor(Color.BLACK);
-                tv2.setTextColor(Color.BLACK);
-                tv3.setTextColor(Color.BLACK);
-
-
-                tv2.setText("Date and Time of order : " + ordersDB.get(orders.getKey()).get("dateTime"));
-                tv3.setText("Net total : Rs." + ordersDB.get(orders.getKey()).get("netPrice"));
-                layout2.addView(tv1);
-
-                prodIds=ordersDB.get(orders.getKey()).get("prodNos").split(",");
-                freqs=ordersDB.get(orders.getKey()).get("prodFreq").split(",");
                 String w,q;
                 Log.i("ProductsNo", Integer.toString(prodIds.length));
                 for(int i = 0; i < prodIds.length; i++){
@@ -204,6 +230,7 @@ public class AllOrders extends AppCompatActivity {
                 //layout2.addView(ll);
                 layout2.addView(tv2);
                 layout2.addView(tv3);
+                layout2.addView(tv6);
                 layout2.setPadding(0,40,0,40);
                 layout2.addView(cancelOrder);
                 linearLayout.addView(layout2);
@@ -214,6 +241,7 @@ public class AllOrders extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     void setupToolbar(){

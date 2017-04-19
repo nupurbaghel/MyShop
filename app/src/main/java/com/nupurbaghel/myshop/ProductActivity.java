@@ -104,6 +104,7 @@ public class ProductActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     @Override

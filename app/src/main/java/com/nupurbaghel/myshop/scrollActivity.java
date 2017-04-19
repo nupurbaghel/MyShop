@@ -217,6 +217,7 @@ public class scrollActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     void setupToolbar(){

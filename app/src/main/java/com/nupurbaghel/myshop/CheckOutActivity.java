@@ -39,7 +39,7 @@ import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 import static com.nupurbaghel.myshop.ViewCartActivity.netTotal;
 
 public class CheckOutActivity extends AppCompatActivity {
-    HashMap<String,String> details=new HashMap<>();
+    static HashMap<String,String> details=new HashMap<>();
     EditText name,address,phone,email;
     String name_,address_,phone_,email_;
     Button checko;
@@ -314,6 +314,8 @@ public class CheckOutActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
+        details.clear();
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }

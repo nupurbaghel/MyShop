@@ -44,6 +44,7 @@ import static android.R.attr.layout_centerInParent;
 import static android.R.attr.layout_centerVertical;
 import static android.R.attr.width;
 import static com.nupurbaghel.myshop.HomeActivity.map;
+import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 
 public class scrollActivity extends AppCompatActivity {
 
@@ -204,7 +205,7 @@ public class scrollActivity extends AppCompatActivity {
                     Intent x= new Intent(scrollActivity.this,ProductActivity.class);
                     Log.i("SubcatInScroll", String.valueOf(finalI));
                     x.putExtra("subCategoryNo",finalI);
-                    x.putExtra("categoryNo",String.valueOf(categoryNo));
+                    x.putExtra("categoryNo",categoryNo);
                     Toast.makeText(scrollActivity.this, "Chose filters from left menu", Toast.LENGTH_SHORT).show();
                     startActivity(x);
 
@@ -216,6 +217,7 @@ public class scrollActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }

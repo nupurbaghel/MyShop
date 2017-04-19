@@ -26,7 +26,7 @@
             android:paddingTop="20dp"
             android:text="Enter details for your order"
             android:textAlignment="center"
-            android:textColor="@color/authui_inputTextColorDark"
+            android:textColor="@color/cardview_dark_background"
             android:textSize="28sp" />
 
         <LinearLayout

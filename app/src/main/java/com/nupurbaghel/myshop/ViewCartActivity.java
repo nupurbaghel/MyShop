@@ -81,6 +81,7 @@ public class ViewCartActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+        mycart.clear();
         finish();
     }
 

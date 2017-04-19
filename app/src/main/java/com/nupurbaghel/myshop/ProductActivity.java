@@ -51,6 +51,7 @@ import java.util.Map;
 import static android.R.attr.actionModeCloseDrawable;
 import static android.R.attr.layout_centerVertical;
 import static com.nupurbaghel.myshop.HomeActivity.map;
+import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -103,6 +104,7 @@ public class ProductActivity extends AppCompatActivity {
     }
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }
@@ -120,7 +122,7 @@ public class ProductActivity extends AppCompatActivity {
         subCategoryNo = getIntent().getIntExtra("subCategoryNo",1);
         //Log.i("SubcatInProduct", String.valueOf(subCategoryNo));
 
-        categoryNo = getIntent().getIntExtra("button",1);
+        categoryNo = getIntent().getIntExtra("categoryNo",1);
         //Log.i("Category No", String.valueOf(categoryNo));
 
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");

@@ -30,6 +30,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static android.R.color.black;
+import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 
@@ -240,6 +241,8 @@ public class AllOrders extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
+        details.clear();
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }

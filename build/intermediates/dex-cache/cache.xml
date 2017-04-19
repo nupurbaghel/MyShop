@@ -205,7 +205,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="a87998be13fb077b1231bfa03459bfb47cdef226">
+        sha1="7508574b5ec6b256058f2164eabccfe7a95a6f2b">
         <dex dex="/Users/nupur/Desktop/MyShop/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run_af557b1c3c13a644949e7e748de3632bc077cbb4/classes.dex" />
     </item>
     <item
@@ -313,7 +313,7 @@
         jumboMode="true"
         optimize="true"
         revision="25.0.2"
-        sha1="807ca5d5a8a62922f63ddb542b2baae2a47cc846">
+        sha1="673a174d02856a9333d1671fa19b2fb74f880e01">
         <dex dex="/Users/nupur/Desktop/MyShop/app/build/intermediates/transforms/dex/debug/folders/1000/10/instant-run-bootstrap_1ac9b81d8dcb172777561d71bdbe10bf9aa70068/classes.dex" />
     </item>
     <item

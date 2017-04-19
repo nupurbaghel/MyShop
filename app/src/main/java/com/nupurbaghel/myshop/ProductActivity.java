@@ -12,11 +12,13 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.Layout;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -46,6 +48,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import static android.R.attr.actionModeCloseDrawable;
 import static android.R.attr.layout_centerVertical;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 
@@ -55,9 +58,10 @@ public class ProductActivity extends AppCompatActivity {
     int categoryNo,subCategoryNo;
     String imageURL;
     private Firebase mRef;
-    String[] prodIds;
+    static String[] prodIds;
     int count;
-    Spinner price,discount,quality,company,color;
+    Spinner criteria,filter;
+    int pos1,pos2,pos3,pos4,pos5;
     private DrawerLayout mDrawerLayout;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
     ActionBar actionBar;
@@ -123,8 +127,8 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 linearLayout2.removeAllViews();
-                findCount(dataSnapshot);
-                displayInLayout();
+                findCount();
+                displayInLayout(prodIds);
             }
 
             @Override
@@ -158,35 +162,84 @@ public class ProductActivity extends AppCompatActivity {
 
     public void init_navdrawer(){
 
-        price= (Spinner)findViewById(R.id.filter_by_price);
-        discount= (Spinner)findViewById(R.id.filter_by_discount);
-        color= (Spinner)findViewById(R.id.filter_by_color);
-        quality= (Spinner)findViewById(R.id.filter_by_quality);
-        company= (Spinner)findViewById(R.id.filter_by_company);
+        criteria= (Spinner)findViewById(R.id.criteria);
+        filter= (Spinner)findViewById(R.id.filter);
+        findCount();
 
-        ArrayAdapter<CharSequence> adapter_price = ArrayAdapter.createFromResource(this, R.array.filter_price, android.R.layout.simple_spinner_item);
-        adapter_price.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        price.setAdapter(adapter_price);
+        //set adapters for all spinners
+        final FilterClass filterClass= new FilterClass();
+        criteria.setAdapter(filterClass.CreateAdapter(this,"criteria"));
 
-        ArrayAdapter<CharSequence> adapter_discount = ArrayAdapter.createFromResource(this, R.array.filter_discount, android.R.layout.simple_spinner_item);
-        adapter_discount.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
-        discount.setAdapter(adapter_discount);
+        criteria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selected= (String) criteria.getItemAtPosition(position);
+                if(selected.equals("Chose Color")||selected.equals("Chose Make")||selected.equals("Chose Material")){
+                    create_filter(selected);
+                }
+                else{
+                    if(selected.equals("Highest Discount First")){
+                        displayInLayout(filterClass.findProdId("discount",selected));
+                    }
+                    else if(selected.equals("Highest Price First")){
+                        displayInLayout(filterClass.findProdId("price",selected));
+                    }
+                    else if(selected.equals("Lowest Discount First")){
+                        displayInLayout(filterClass.findProdId("discount",selected));
+                    }
+                    else{
+                        displayInLayout(filterClass.findProdId("price",selected));
+                    }
+                    mDrawerLayout.closeDrawer(Gravity.LEFT,true);
+                }
+            }
 
-        ArrayAdapter<CharSequence> adapter_color = ArrayAdapter.createFromResource(this, R.array.filter_color, android.R.layout.simple_spinner_item);
-        adapter_color.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
-        color.setAdapter(adapter_color);
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
 
-        ArrayAdapter<CharSequence> adapter_quality = ArrayAdapter.createFromResource(this, R.array.filter_quality, android.R.layout.simple_spinner_item);
-        adapter_quality.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
-        quality.setAdapter(adapter_quality);
-
-        ArrayAdapter<CharSequence> adapter_company = ArrayAdapter.createFromResource(this, R.array.filter_company, android.R.layout.simple_spinner_item);
-        adapter_company.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // Specify the layout to use when the list of choices appears
-        company.setAdapter(adapter_company);
+            }
+        });
 
     }
 
-    public void findCount(DataSnapshot dataSnapshot){
+    public void create_filter(final String selected){
+        final FilterClass filterClass= new FilterClass();
+        filter.setAdapter(filterClass.CreateAdapter(this,selected));
+        filter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(selected.equals("Chose Color")){
+                    displayInLayout(filterClass.findProdId("color", (String) filter.getItemAtPosition(position)));
+                }
+                else if(selected.equals("Chose Material")){
+                    displayInLayout(filterClass.findProdId("quality", (String) filter.getItemAtPosition(position)));
+                }
+                else{
+                    displayInLayout(filterClass.findProdId("company", (String) filter.getItemAtPosition(position)));
+                }
+                if(!filter.getItemAtPosition(position).toString().equals("None"))
+                mDrawerLayout.closeDrawer(Gravity.LEFT,true);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+    private int getIndex(Spinner spinner, String myString){
+
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).equals(myString)){
+                index = i;
+            }
+        }
+        return index;
+    }
+
+    public void findCount(){
         count=Integer.parseInt( map.get("category").get(categoryNo+"-"+subCategoryNo).get("total"));
         Log.i("TotalCountoOfProducts",Integer.toString(count));
         prodIds=map.get("category").get(categoryNo+"-"+subCategoryNo).get("products").split(",");
@@ -195,11 +248,11 @@ public class ProductActivity extends AppCompatActivity {
         }
     }
 
-    public void displayInLayout(){
+    public void displayInLayout(String[] prodIds){
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
         StorageReference imagesRef;
-
+        linearLayout2.removeAllViews();
         for(String w:prodIds) {
 
 

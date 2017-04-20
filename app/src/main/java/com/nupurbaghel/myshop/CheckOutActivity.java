@@ -43,6 +43,7 @@ public class CheckOutActivity extends AppCompatActivity {
     EditText name,address,phone,email;
     String name_,address_,phone_,email_;
     Button checko;
+    float TotalCost;
     FirebaseUser currentFirebaseUser;
     private Firebase mref2;
     ManageCart manageCart;
@@ -235,7 +236,19 @@ public class CheckOutActivity extends AppCompatActivity {
             Log.i("Keys Found",cartItem.getKey().toString());
             prodNos=prodNos + cartItem.getKey().toString() + "," ;
             prodFreqs=prodFreqs + cartItem.getValue().toString() + ",";
+
+            String quantity = (String) cartItem.getValue();
+            String prodId= (String) cartItem.getKey();
+            String price= map.get("product").get(prodId).get("price");
+            String discount= map.get("product").get(prodId).get("discount");
+            String total = findCost(price,discount,quantity);
+            String cost = "Per item = Rs "+ price +" -" +discount+"%  = Rs"+ total;
+
         }
+
+
+
+
         mymap.put("name",name_);
         mymap.put("address",address_);
         mymap.put("email",email_);
@@ -243,7 +256,7 @@ public class CheckOutActivity extends AppCompatActivity {
         mymap.put("prodNos",prodNos);
         mymap.put("prodFreq",prodFreqs);
         mymap.put("userId",currentFirebaseUser.getUid());
-        mymap.put("netPrice",netTotal);
+        mymap.put("netPrice",Float.toString(TotalCost));
         mymap.put("dateTime",currentDateTimeString);
         mymap.put("status","Processing");
 
@@ -285,4 +298,14 @@ public class CheckOutActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
+
+    public String findCost(String price,String discount, String quantity){
+        float Price = Float.parseFloat(price);
+        float Discount = Float.parseFloat(discount);
+
+        float cost = (float) (Price - Discount * 0.01 * Price);
+        TotalCost = TotalCost + cost * (float)Integer.parseInt(quantity);
+        return Float.toString(cost);
+    }
+
 }

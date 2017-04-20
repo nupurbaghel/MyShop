@@ -43,7 +43,7 @@ import static android.R.attr.layout_centerInParent;
 import static android.R.attr.layout_centerVertical;
 import static android.R.attr.width;
 import static com.nupurbaghel.myshop.HomeActivity.map;
-import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class scrollActivity extends AppCompatActivity {
 

@@ -18,7 +18,6 @@ import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class ManageCart {
     String fname = "cart.txt";
-
     public  Map<String,String> LoadCart(Context context) {
         Map<String,String> mycart= new HashMap();
         File file = new File(context.getDir("data", MODE_PRIVATE), fname);

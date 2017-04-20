@@ -41,12 +41,13 @@ public class GenerateMail {
                 "</head>\n" +
                 "<body>\n" +
                 "<p>\n" +
-                "<b> Username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;</b> "+details.get("name") +" <br>\n" +
-                "<b> User Address : </b>&nbsp; "+ details.get("address") +" <br>\n" +
-                "<b> User Email &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: </b>&nbsp; "+ details.get("email") +" <br>\n" +
-                "<b> User Contact &nbsp;: </b>&nbsp; "+ details.get("phone") +" <br>\n" +
+                " <h2> User Details </h2>"+
+                "<b> Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;</b> "+details.get("name") +" <br>\n" +
+                "<b> Address : </b>&nbsp&nbsp&nbsp; "+ details.get("address") +" <br>\n" +
+                "<b> Email ID &nbsp;&nbsp;: </b>&nbsp; "+ details.get("email") +" <br>\n" +
+                "<b> Contact &nbsp;&nbsp;: </b>&nbsp; "+ details.get("phone") +" <br>\n" +
                 "</p>\n" +
-                "<table>\n" +
+                "<h2>Order Details</h2><table>\n" +
                 "  <tr>\n" +
                 "    <th>S.No</th>\n" +
                 "    <th>Product Name</th>\n" +
@@ -55,6 +56,7 @@ public class GenerateMail {
                 "    <th>Discount </th>\n" +
                 "    <th>Net Price Per Item</th>\n" +
                 "    <th>Quantity </th>\n" +
+                "    <th>Total </th>\n" +
                 "  </tr>\n" ;
 
         for(Map.Entry cartItem: mycart.entrySet()) {
@@ -63,19 +65,28 @@ public class GenerateMail {
             String price=mymap.get("price");
             String discount=mymap.get("discount");
             String quantity=cartItem.getValue().toString();
+            String cost= findCost(price,discount,quantity);
+            String total= Float.toString(Float.parseFloat(cost)*Float.parseFloat(quantity));
             msg= msg+ "  <tr>\n" +
                     "    <td>"+ Integer.toString(i) +"</td>\n" +
                     "    <td>"+ mymap.get("name") +"</td>\n" +
                     "    <td>"+ cartItem.getKey() +"</td>\n" +
                     "    <td> Rs "+ price +"</td>\n" +
                     "    <td>"+  discount +"%</td>\n" +
-                    "    <td> Rs "+ findCost(price,discount,quantity)+"</td>\n" +
+                    "    <td> Rs "+ cost +"</td>\n" +
                     "    <td>"+ quantity +" </td>\n" +
+                    "    <td> Rs "+ total +" </td>\n" +
                     "  </tr>\n" ;
-
+            i=i+1;
         }
 
-        msg= msg + "<tr><th></th><th>Total Cost</th><th> Rs "+ Float.toString(TotalCost) +" </th><th></th></tr>\n" +
+        msg= msg + "<tr><th></th>\n"+
+                "    <th></th>\n" +
+                "    <th></th>\n" +
+                "    <th></th>\n" +
+                "    <th></th>\n" +
+                "    <th></th>\n" +
+                "<th>Grand Total</th><th> Rs "+ Float.toString(TotalCost) +" </th></tr>\n" +
                 "</table>\n" +
                 "</body>\n" +
                 "</html>\n" ;

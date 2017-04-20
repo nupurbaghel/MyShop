@@ -35,7 +35,7 @@ import java.util.Map;
 import static android.R.attr.button;
 import static com.nupurbaghel.myshop.R.id.gridLayout;
 import static com.nupurbaghel.myshop.R.id.linearLayout;
-import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class HomeActivity extends AppCompatActivity {
     int count = 0;

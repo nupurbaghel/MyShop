@@ -45,7 +45,7 @@ public class CheckOutActivity extends AppCompatActivity {
     Button checko;
     FirebaseUser currentFirebaseUser;
     private Firebase mref2;
-
+    ManageCart manageCart;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -146,6 +146,7 @@ public class CheckOutActivity extends AppCompatActivity {
         });
 
         setupToolbar();
+        manageCart = new ManageCart();
     }
 
     public void save_details(EditText name,EditText address,EditText email,EditText phone){
@@ -251,12 +252,13 @@ public class CheckOutActivity extends AppCompatActivity {
 
     }
 
-    boolean clearEverything(){
+    void clearEverything(){
         mycart.clear();
         AlertDialog.Builder builder1 = new AlertDialog.Builder(CheckOutActivity.this);
-        builder1.setMessage("Your order has been sucessfully placed");
+        builder1.setMessage("Your order has been successfully placed");
         builder1.setCancelable(true);
 
+        manageCart.updateCart(CheckOutActivity.this);
         builder1.setPositiveButton("Ok",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -266,21 +268,7 @@ public class CheckOutActivity extends AppCompatActivity {
 
         AlertDialog alert11 = builder1.create();
         alert11.show();
-        try {
-            String fname = "cart.txt";
-            File file = new File(getDir("data", MODE_PRIVATE), fname);
 
-            ObjectOutputStream outputStream = null;
-            outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeObject(mycart);
-            outputStream.flush();
-            outputStream.close();
-            return true;
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return false;
-        }
     }
 
     public void Logout(){

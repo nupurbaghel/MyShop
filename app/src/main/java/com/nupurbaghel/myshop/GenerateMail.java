@@ -43,7 +43,7 @@ public class GenerateMail {
                 "<p>\n" +
                 " <h2> User Details </h2>"+
                 "<b> Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;</b> "+details.get("name") +" <br>\n" +
-                "<b> Address : </b>&nbsp&nbsp&nbsp; "+ details.get("address") +" <br>\n" +
+                "<b> Address : </b>&nbsp;&nbsp;&nbsp; "+ details.get("address") +" <br>\n" +
                 "<b> Email ID &nbsp;&nbsp;: </b>&nbsp; "+ details.get("email") +" <br>\n" +
                 "<b> Contact &nbsp;&nbsp;: </b>&nbsp; "+ details.get("phone") +" <br>\n" +
                 "</p>\n" +

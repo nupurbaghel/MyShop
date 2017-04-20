@@ -25,6 +25,9 @@ import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -33,6 +36,7 @@ import static android.R.color.black;
 import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
+import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class AllOrders extends AppCompatActivity {
     LinearLayout linearLayout;
@@ -58,8 +62,8 @@ public class AllOrders extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                Log.i("Clicked","logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
@@ -68,6 +72,9 @@ public class AllOrders extends AppCompatActivity {
             case R.id.checkOut:
                 Log.i("Clicked","Check Out");
                 startActivity(new Intent(AllOrders.this,CheckOutActivity.class));
+                return true;
+            case R.id.home:
+                startActivity(new Intent(this,HomeActivity.class));
                 return true;
             default:return false;
         }
@@ -237,14 +244,6 @@ public class AllOrders extends AppCompatActivity {
                 linearLayout.addView(layout2);
             }
         }
-    }
-
-    public void Logout(){
-        FirebaseAuth.getInstance().signOut();
-        mycart.clear();
-        details.clear();
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
     }
 
     void setupToolbar(){

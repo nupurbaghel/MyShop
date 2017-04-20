@@ -34,35 +34,14 @@ public class MainActivity extends AppCompatActivity {
     Button register;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    String TAG= "My msg ";
+    String TAG= "Mymsg ";
     private ProgressDialog progressDialog;
     private Firebase mRef;
 
     @Override
     public void onBackPressed() {
-        AlertDialog diaBox = AskOption();
-        diaBox.show();
     }
 
-    private AlertDialog AskOption()
-    {
-        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
-                .setTitle("Exit")
-                .setMessage("Are you sure you want to exit?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int whichButton) {
-                        finish();
-                    }
-                })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                })
-                .create();
-        return myQuittingDialogBox;
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +109,16 @@ public class MainActivity extends AppCompatActivity {
         String password=passwordText.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
-            Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_LONG).show();
+            if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)){
+                Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_LONG).show();
+            }
+            else if(TextUtils.isEmpty(email)){
+                Toast.makeText(MainActivity.this, "Email field is empty", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Password field is empty", Toast.LENGTH_LONG).show();
+            }
+
         }
         else {
             progressDialog.setMessage("Signing in User");
@@ -140,8 +128,21 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if (!task.isSuccessful()) {
+                        progressDialog.cancel();
                         Log.e(TAG, "Sign-in Failed: " + task.getException().getMessage());
-                        Toast.makeText(MainActivity.this, "Sign In problem", Toast.LENGTH_LONG).show();
+                        String temp=task.getException().getMessage();
+                        Log.i("Hello2",temp);
+                        if(temp.indexOf("no user record corresponding to this identifier") != -1){
+                            String display = "No such user found. Register first";
+                            Toast.makeText(MainActivity.this, display, Toast.LENGTH_LONG).show();
+                        }
+                        else if(temp.indexOf("password is invalid") != -1){
+                            String display = "Invalid password!";
+                            Toast.makeText(MainActivity.this, display, Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
 
                     }
                 }
@@ -156,7 +157,16 @@ public class MainActivity extends AppCompatActivity {
         String password=passwordText.getText().toString();
 
         if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)){
-            Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_LONG).show();
+            if(TextUtils.isEmpty(email) && TextUtils.isEmpty(password)){
+                Toast.makeText(MainActivity.this, "Fields are empty", Toast.LENGTH_LONG).show();
+            }
+            else if(TextUtils.isEmpty(email)){
+                Toast.makeText(MainActivity.this, "Email field is empty", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(MainActivity.this, "Password field is empty", Toast.LENGTH_LONG).show();
+            }
+
         }
         else {
             progressDialog.setMessage("Registering User");
@@ -166,9 +176,17 @@ public class MainActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<AuthResult> task) {
 
                     if (!task.isSuccessful()) {
+                        progressDialog.cancel();
                         Log.e(TAG, "Register Failed: " + task.getException().getMessage());
-                        Toast.makeText(MainActivity.this, "registering problem", Toast.LENGTH_LONG).show();
-
+                        String temp=task.getException().getMessage();
+                        Log.i("Hello2",temp);
+                        if(temp.indexOf("WEAK_PASSWORD") != -1){
+                            String display = "Password must consist of atleast 6 characters";
+                            Toast.makeText(MainActivity.this, display, Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
                     }
                 }
             });

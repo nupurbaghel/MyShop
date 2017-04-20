@@ -31,12 +31,11 @@ import java.io.ObjectOutputStream;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
-import static com.nupurbaghel.myshop.ViewCartActivity.netTotal;
+import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class CheckOutActivity extends AppCompatActivity {
     static HashMap<String,String> details=new HashMap<>();
@@ -62,8 +61,8 @@ public class CheckOutActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                Log.i("Clicked","logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
@@ -77,7 +76,9 @@ public class CheckOutActivity extends AppCompatActivity {
                 Log.i("Clicked","All orders");
                 startActivity(new Intent(CheckOutActivity.this,AllOrders.class));
                 return true;
-
+            case R.id.home:
+                startActivity(new Intent(this,HomeActivity.class));
+                return true;
             default:return false;
         }
 
@@ -284,13 +285,6 @@ public class CheckOutActivity extends AppCompatActivity {
 
     }
 
-    public void Logout(){
-        FirebaseAuth.getInstance().signOut();
-        mycart.clear();
-        details.clear();
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
-    }
 
     void setupToolbar(){
         Toolbar toolbar;

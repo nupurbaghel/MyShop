@@ -1,5 +1,7 @@
 package com.nupurbaghel.myshop;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -24,25 +26,19 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-
 import static android.R.attr.layout_centerVertical;
+import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class ViewCartActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
-    ManageCart manageCart;
+    static ManageCart manageCart;
     String netprice;
-    static String netTotal="";
     float TotalCost;
 
     @Override
@@ -60,8 +56,8 @@ public class ViewCartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                Log.i("Clicked","logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case  R.id.checkOut:
                 startActivity(new Intent(this,CheckOutActivity.class));
@@ -80,8 +76,21 @@ public class ViewCartActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        manageCart.clearCart(ViewCartActivity.this);
+        details.clear();
+        String fname = "def_details.txt";
+        File file = new File(getDir("data", MODE_PRIVATE), fname);
+        try {
+            ObjectOutputStream outputStream = null;
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(details);
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         startActivity(new Intent(this,MainActivity.class));
-        mycart.clear();
         finish();
     }
 
@@ -171,8 +180,6 @@ public class ViewCartActivity extends AppCompatActivity {
             tv4.setText(cost);
             netprice = "Net Price: Rs " + Float.toString(Float.parseFloat(total) * Float.parseFloat(quantity));
             tv5.setText(netprice);
-
-            netTotal=Float.toString(Float.parseFloat(total) * Float.parseFloat(quantity));
 
             tv1.setTextColor(Color.BLACK);
             tv1.setTextSize(25);

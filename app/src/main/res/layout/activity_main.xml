@@ -50,7 +50,7 @@
         android:layout_alignStart="@+id/passwordText"
         android:layout_below="@+id/passwordText"
         android:layout_marginTop="51dp"
-        android:text="Log In" />
+        android:text="Sign In" />
 
     <Button
         android:text="Register"

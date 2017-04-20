@@ -1,5 +1,8 @@
 package com.nupurbaghel.myshop;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +19,7 @@ import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,14 +32,19 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 import static android.R.attr.button;
+import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.R.id.gridLayout;
 import static com.nupurbaghel.myshop.R.id.linearLayout;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
+import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class HomeActivity extends AppCompatActivity {
     int count = 0;
@@ -43,12 +52,14 @@ public class HomeActivity extends AppCompatActivity {
     GridLayout gridLayout;
     static Map<String, Map<String, Map<String, String>>> map;
     static Map<String,String> mycart= new HashMap();
+    private ProgressDialog progressDialog;
+    TextView tv4;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
 
         MenuInflater menuInflater=getMenuInflater();
-        menuInflater.inflate(R.menu.main_menu,menu);
+        menuInflater.inflate(R.menu.home_menu,menu);
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -59,8 +70,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                Log.i("Clicked","logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
@@ -78,18 +89,16 @@ public class HomeActivity extends AppCompatActivity {
         }
 
     }
-    public void Logout(){
-        FirebaseAuth.getInstance().signOut();
-        mycart.clear();
-        startActivity(new Intent(this,MainActivity.class));
-        finish();
-    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         //initialise cart
+        progressDialog= new ProgressDialog(this);
+        progressDialog.setMessage("Loading...");
+        progressDialog.show();
         ManageCart manageCart= new ManageCart();
         mycart= manageCart.LoadCart(this);
 
@@ -202,6 +211,7 @@ public class HomeActivity extends AppCompatActivity {
                 }
             });
         }
+        progressDialog.cancel();
     }
 
     void setupToolbar(){

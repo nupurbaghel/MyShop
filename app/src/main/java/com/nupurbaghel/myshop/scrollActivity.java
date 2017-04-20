@@ -1,5 +1,7 @@
 package com.nupurbaghel.myshop;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -32,6 +34,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -42,8 +47,10 @@ import static android.R.attr.layout_centerHorizontal;
 import static android.R.attr.layout_centerInParent;
 import static android.R.attr.layout_centerVertical;
 import static android.R.attr.width;
+import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
+import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class scrollActivity extends AppCompatActivity {
 
@@ -67,8 +74,8 @@ public class scrollActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.logout:
-                Log.i("Clicked", "logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked", "View Cart");
@@ -81,6 +88,9 @@ public class scrollActivity extends AppCompatActivity {
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
                 startActivity(new Intent(scrollActivity.this,AllOrders.class));
+                return true;
+            case R.id.home:
+                startActivity(new Intent(this,HomeActivity.class));
                 return true;
             default:
                 return false;
@@ -216,7 +226,20 @@ public class scrollActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
-        mycart.clear();
+        manageCart.clearCart(scrollActivity.this);
+        details.clear();
+        String fname = "def_details.txt";
+        File file = new File(getDir("data", MODE_PRIVATE), fname);
+        try {
+            ObjectOutputStream outputStream = null;
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(details);
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }

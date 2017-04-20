@@ -1,6 +1,8 @@
 package com.nupurbaghel.myshop;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -50,8 +52,10 @@ import java.util.Map;
 
 import static android.R.attr.actionModeCloseDrawable;
 import static android.R.attr.layout_centerVertical;
+import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
+import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -84,8 +88,8 @@ public class ProductActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                Log.i("Clicked","logout");
-                Logout();
+                logoutAlert alertt=new logoutAlert();
+                alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked","View Cart");
@@ -99,13 +103,29 @@ public class ProductActivity extends AppCompatActivity {
                 Log.i("Clicked","All orders");
                 startActivity(new Intent(ProductActivity.this,AllOrders.class));
                 return true;
+            case R.id.home:
+                startActivity(new Intent(this,HomeActivity.class));
+                return true;
             default:return false;
         }
 
     }
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
-        mycart.clear();
+        manageCart.clearCart(ProductActivity.this);
+        details.clear();
+        String fname = "def_details.txt";
+        File file = new File(getDir("data", MODE_PRIVATE), fname);
+        try {
+            ObjectOutputStream outputStream = null;
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(details);
+            outputStream.flush();
+            outputStream.close();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
         startActivity(new Intent(this,MainActivity.class));
         finish();
     }

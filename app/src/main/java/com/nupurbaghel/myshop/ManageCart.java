@@ -37,6 +37,24 @@ public class ManageCart {
         return  mycart;
     }
 
+    public void clearCart(Context context){
+
+        File file = new File(context.getDir("data", MODE_PRIVATE), fname);
+        ObjectOutputStream outputStream = null;
+
+        try {
+            mycart.clear();
+            outputStream = new ObjectOutputStream(new FileOutputStream(file));
+            outputStream.writeObject(mycart);
+            outputStream.flush();
+            outputStream.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
     public void updateCart(Context context){
 
         File file = new File(context.getDir("data", MODE_PRIVATE), fname);

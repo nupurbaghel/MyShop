@@ -244,6 +244,7 @@ public class CheckOutActivity extends AppCompatActivity {
         mymap.put("userId",currentFirebaseUser.getUid());
         mymap.put("netPrice",netTotal);
         mymap.put("dateTime",currentDateTimeString);
+        mymap.put("status","Processing");
 
         mref2.push().setValue(mymap);
         Log.i("Addtofire","ended");
@@ -284,7 +285,10 @@ public class CheckOutActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
+        details.clear();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     void setupToolbar(){

@@ -105,7 +105,9 @@ public class ProductActivity extends AppCompatActivity {
     }
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
 
     @Override
@@ -121,7 +123,7 @@ public class ProductActivity extends AppCompatActivity {
         subCategoryNo = getIntent().getIntExtra("subCategoryNo",1);
         //Log.i("SubcatInProduct", String.valueOf(subCategoryNo));
 
-        categoryNo = getIntent().getIntExtra("button",1);
+        categoryNo = getIntent().getIntExtra("categoryNo",1);
         //Log.i("Category No", String.valueOf(categoryNo));
 
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
@@ -145,7 +147,6 @@ public class ProductActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
-
         setupToolbar();
         setupDrawerToggle();
         init_navdrawer();

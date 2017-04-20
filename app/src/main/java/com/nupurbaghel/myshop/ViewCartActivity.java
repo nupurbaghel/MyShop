@@ -42,7 +42,7 @@ public class ViewCartActivity extends AppCompatActivity {
     LinearLayout linearLayout;
     ManageCart manageCart;
     String netprice;
-    static String netTotal;
+    static String netTotal="";
     float TotalCost;
 
     @Override
@@ -81,6 +81,8 @@ public class ViewCartActivity extends AppCompatActivity {
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
         startActivity(new Intent(this,MainActivity.class));
+        mycart.clear();
+        finish();
     }
 
     @Override

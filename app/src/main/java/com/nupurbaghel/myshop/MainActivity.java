@@ -1,6 +1,8 @@
 package com.nupurbaghel.myshop;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.text.TextUtilsCompat;
@@ -36,6 +38,31 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private Firebase mRef;
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog diaBox = AskOption();
+        diaBox.show();
+    }
+
+    private AlertDialog AskOption()
+    {
+        AlertDialog myQuittingDialogBox =new AlertDialog.Builder(this)
+                .setTitle("Exit")
+                .setMessage("Are you sure you want to exit?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .create();
+        return myQuittingDialogBox;
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

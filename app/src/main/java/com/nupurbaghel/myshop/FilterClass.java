@@ -28,7 +28,10 @@ public class FilterClass {
             LinkedHashSet<String> values = new LinkedHashSet<String>();
             values.add("None");
             for (String prodId : prodIds) {
-                values.add(map.get("product").get(prodId).get(name));
+                String [] temp =map.get("product").get(prodId).get(name).split(",");
+                for(String x:temp) {
+                    values.add(x);
+                }
             }
             adapter = new ArrayAdapter(context, R.layout.spinner_item, values.toArray(new String[values.size()]));
         }
@@ -52,9 +55,12 @@ public class FilterClass {
         else{
 
             for (String prodId : prodIds){
-                String value= map.get("product").get(prodId).get(filter_name);
-                if(value.equals(matchvalue)||value.equals("all")){
-                    newProdIds.add(prodId);
+                String value[]= map.get("product").get(prodId).get(filter_name).split(",");
+                for(String x:value) {
+                    if (x.equals(matchvalue)) {
+                        newProdIds.add(prodId);
+                        break;
+                    }
                 }
             }
         }

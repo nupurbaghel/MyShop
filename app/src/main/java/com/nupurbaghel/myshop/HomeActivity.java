@@ -35,6 +35,7 @@ import java.util.Map;
 import static android.R.attr.button;
 import static com.nupurbaghel.myshop.R.id.gridLayout;
 import static com.nupurbaghel.myshop.R.id.linearLayout;
+import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
 
 public class HomeActivity extends AppCompatActivity {
     int count = 0;
@@ -79,7 +80,9 @@ public class HomeActivity extends AppCompatActivity {
     }
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
+        mycart.clear();
         startActivity(new Intent(this,MainActivity.class));
+        finish();
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,7 +196,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.i("AppDebug","button clicked");
                     Intent x= new Intent(HomeActivity.this,scrollActivity.class);
                     Log.i("ButtonHome", String.valueOf(finalI));
-                    x.putExtra("categoryNo",String.valueOf(finalI));
+                    x.putExtra("categoryNo",finalI);
                     startActivity(x);
 
                 }

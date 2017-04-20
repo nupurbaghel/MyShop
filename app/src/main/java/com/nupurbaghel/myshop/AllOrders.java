@@ -31,7 +31,7 @@ import java.util.Map;
 
 import static android.R.color.black;
 import static com.nupurbaghel.myshop.HomeActivity.map;
-import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class AllOrders extends AppCompatActivity {
     LinearLayout linearLayout;

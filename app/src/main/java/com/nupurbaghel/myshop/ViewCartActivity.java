@@ -35,12 +35,12 @@ import java.util.Map;
 
 import static android.R.attr.layout_centerVertical;
 import static com.nupurbaghel.myshop.HomeActivity.map;
-
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class ViewCartActivity extends AppCompatActivity {
 
-    static Map<String,String> mycart= new HashMap();
     LinearLayout linearLayout;
+    ManageCart manageCart;
     String netprice;
     static String netTotal;
     float TotalCost;
@@ -99,59 +99,19 @@ public class ViewCartActivity extends AppCompatActivity {
         }
 
         setupToolbar();
+        manageCart = new ManageCart();
     }
-
-
     public boolean getCart(){
-        String fname = "cart.txt";
-        File file = new File(getDir("data", MODE_PRIVATE), fname);
 
-        try {
-            if (file.exists()) {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                mycart = (HashMap<String, String>) ois.readObject();
-                if(mycart.isEmpty()) {
-                    Log.i("Cart","empty");
-                    return false;
-                }
-                else{
-                    Log.i("Loaded cart ", mycart.toString());
-                    return true;
-                }
-            }
-            else{
-                ObjectOutputStream outputStream = null;
-                outputStream = new ObjectOutputStream(new FileOutputStream(file));
-                outputStream.writeObject(mycart);
-                outputStream.flush();
-                outputStream.close();
-
-                return false;
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
+        if (mycart.isEmpty()) {
+            Log.i("Cart", "empty");
             return false;
+        } else {
+            Log.i("Loaded cart ", mycart.toString());
+            return true;
         }
     }
 
-    public void updateCart(){
-        String fname = "cart.txt";
-        File file = new File(getDir("data", MODE_PRIVATE), fname);
-        ObjectOutputStream outputStream = null;
-
-        try {
-            outputStream = new ObjectOutputStream(new FileOutputStream(file));
-            outputStream.writeObject(mycart);
-            outputStream.flush();
-            outputStream.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-    }
     public void displayInLayout(){
         FirebaseStorage storage= FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
@@ -272,9 +232,8 @@ public class ViewCartActivity extends AppCompatActivity {
     View.OnClickListener AddToCart(final Button btn, final String prodId,final String quantity)  {
         return new View.OnClickListener() {
             public void onClick(View v) {
-                int qty =1+ Integer.parseInt(quantity);
-                mycart.put(prodId,Integer.toString(qty));
-                updateCart();
+
+                manageCart.AddToCart(ViewCartActivity.this,prodId,quantity);
                 linearLayout.removeAllViews();
                 TotalCost=0;
                 displayInLayout();
@@ -286,15 +245,8 @@ public class ViewCartActivity extends AppCompatActivity {
     View.OnClickListener RemoveFromCart(final Button btn, final String prodId,final String quantity)  {
         return new View.OnClickListener() {
             public void onClick(View v) {
-                int qty = Integer.parseInt(quantity);
-                qty= qty-1;
-                if(qty==0){
-                    mycart.remove(prodId);
-                }
-                else {
-                    mycart.put(prodId, Integer.toString(qty));
-                }
-                updateCart();
+
+                manageCart.ReduceQty(ViewCartActivity.this,prodId,"1");
                 linearLayout.removeAllViews();
                 TotalCost=0;
                 displayInLayout();

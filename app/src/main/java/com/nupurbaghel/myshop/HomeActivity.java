@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -40,6 +41,7 @@ public class HomeActivity extends AppCompatActivity {
     private Firebase mRef;
     GridLayout gridLayout;
     static Map<String, Map<String, Map<String, String>>> map;
+    static Map<String,String> mycart= new HashMap();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -83,7 +85,11 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Log.i("Entered On create","a");
+
+        //initialise cart
+        ManageCart manageCart= new ManageCart();
+        mycart= manageCart.LoadCart(this);
+
         gridLayout=(GridLayout) findViewById(R.id.gridLayout);
         gridLayout.removeAllViews();
         mRef=new Firebase("https://my-shop-93286.firebaseio.com/");

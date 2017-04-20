@@ -51,6 +51,7 @@ import java.util.Map;
 import static android.R.attr.actionModeCloseDrawable;
 import static android.R.attr.layout_centerVertical;
 import static com.nupurbaghel.myshop.HomeActivity.map;
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 
 public class ProductActivity extends AppCompatActivity {
 
@@ -66,6 +67,7 @@ public class ProductActivity extends AppCompatActivity {
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
     ActionBar actionBar;
     Toolbar toolbar;
+    ManageCart managecart;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -143,9 +145,11 @@ public class ProductActivity extends AppCompatActivity {
 
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         mDrawerLayout.setDrawerListener(mDrawerToggle);
+
         setupToolbar();
         setupDrawerToggle();
         init_navdrawer();
+        managecart = new ManageCart();
     }
 
     void setupToolbar(){
@@ -279,7 +283,45 @@ public class ProductActivity extends AppCompatActivity {
             TextView company = new TextView(getApplicationContext());
             TextView price = new TextView(getApplicationContext());
             TextView discount = new TextView(getApplicationContext());
+            TextView quantity = new TextView(getApplicationContext());
+            quantity.setText("Quantity : ");
             Button btn = new Button(getApplicationContext());
+
+            LinearLayout layout3 = new LinearLayout(getApplicationContext());
+            layout3.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+            layout3.setOrientation(LinearLayout.HORIZONTAL);
+            final TextView qty= new TextView(getApplicationContext());
+            qty.setText("1");
+            qty.setTextSize(20);
+            Button add = new Button(getApplicationContext());
+            add.setText("+");
+            Button minus =new Button(getApplicationContext());
+            minus.setText("-");
+            add.setLayoutParams(new ViewGroup.LayoutParams((int) width/3,(int) width/3));
+            minus.setLayoutParams(new ViewGroup.LayoutParams((int) width/3,(int) width/3));
+            layout3.addView(quantity);
+            layout3.addView(qty);
+            layout3.addView(add);
+            layout3.addView(minus);
+
+            add.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int quantity =1 + Integer.parseInt(qty.getText().toString());
+                    qty.setText(Integer.toString(quantity));
+                }
+            });
+
+            minus.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int quantity = Integer.parseInt(qty.getText().toString()) - 1;
+                    if(quantity == 0)
+                        qty.setText("1");
+                    else
+                        qty.setText(Integer.toString(quantity));
+                }
+            });
 
             String name_= map.get("product").get(w).get("name");
             String company_= map.get("product").get(w).get("company");
@@ -294,12 +336,15 @@ public class ProductActivity extends AppCompatActivity {
             company.setTextColor(Color.BLACK);
             price.setTextColor(Color.BLACK);
             discount.setTextColor(Color.BLACK);
+            quantity.setTextColor(Color.BLACK);
+            qty.setTextColor(Color.BLACK);
             btn.setText("Add to cart");
 
             layout2.addView(name);
             layout2.addView(company);
             layout2.addView(price);
             layout2.addView(discount);
+            layout2.addView(layout3);
             layout2.addView(btn);
             layout2.setGravity(layout_centerVertical);
             layout2.setPadding(50,50,50,50);
@@ -308,46 +353,16 @@ public class ProductActivity extends AppCompatActivity {
             Log.i("Adding layout",w);
 
             linearLayout2.addView(parent);
-            btn.setOnClickListener(AddToCart(btn, w, name_));
+            btn.setOnClickListener(AddToCart(btn, w, name_, qty));
         }
     }
 
-    View.OnClickListener AddToCart(final Button btn, final String prodId,final String prodName)  {
+    View.OnClickListener AddToCart(final Button btn, final String prodId,final String prodName,final TextView quantity)  {
         return new View.OnClickListener() {
             public void onClick(View v) {
 
-                String fname = "cart.txt";
-                File file = new File(getDir("data", MODE_PRIVATE), fname);
-                HashMap<String,String>mycart= new HashMap<String,String>();
-                ObjectOutputStream outputStream = null;
-
-                try {
-                    if(file.exists()) {
-                        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                        mycart = (HashMap<String, String>) ois.readObject();
-                        Log.i("Loaded cart ", mycart.toString());
-                    }
-                    //HashMap<String,String> mycart= new HashMap<String,String>{};
-
-
-                    if(mycart.containsKey(prodId)){
-                        int qty=Integer.parseInt(mycart.get(prodId));
-                        qty = qty +1;
-                        mycart.put(prodId,Integer.toString(qty) );
-                    }
-                    else{
-                        mycart.put(prodId,"1");
-                    }
-                    outputStream = new ObjectOutputStream(new FileOutputStream(file));
-                    outputStream.writeObject(mycart);
-                    outputStream.flush();
-                    outputStream.close();
-
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                Toast.makeText(ProductActivity.this, "Added "+prodName+" to Cart", Toast.LENGTH_SHORT).show();
+                managecart.AddToCart(ProductActivity.this,prodId,quantity.getText().toString());
+                Toast.makeText(ProductActivity.this, "Added "+quantity.getText().toString() +" "+prodName+" to Cart ", Toast.LENGTH_SHORT).show();
                 Log.i("Added to cart" , prodName);
             }
         };

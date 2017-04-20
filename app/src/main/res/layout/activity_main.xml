@@ -13,17 +13,6 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textEmailAddress"
-        android:ems="10"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="85dp"
-        android:id="@+id/emailText"
-        android:hint="email.." />
-
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:inputType="textPassword"
         android:ems="10"
         android:layout_below="@+id/emailText"
@@ -33,7 +22,7 @@
         android:hint="password" />
 
     <Button
-        android:text="SignUp"
+        android:text="SignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="51dp"
@@ -49,4 +38,24 @@
         android:layout_toEndOf="@+id/signupbutton"
         android:layout_marginStart="53dp"
         android:id="@+id/registerButton" />
+
+    <ImageView
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:src="@drawable/mainlogo"
+        android:gravity="center_horizontal"
+        android:id="@+id/logo"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="textEmailAddress"
+        android:ems="10"
+        android:layout_marginTop="26dp"
+        android:id="@+id/emailText"
+        android:hint="email.."
+        android:layout_below="@+id/logo"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>

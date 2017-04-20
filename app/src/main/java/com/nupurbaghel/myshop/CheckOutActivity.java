@@ -35,11 +35,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 import static com.nupurbaghel.myshop.HomeActivity.map;
-import static com.nupurbaghel.myshop.ViewCartActivity.mycart;
+import static com.nupurbaghel.myshop.HomeActivity.mycart;
 import static com.nupurbaghel.myshop.ViewCartActivity.netTotal;
 
 public class CheckOutActivity extends AppCompatActivity {
-    HashMap<String,String> details=new HashMap<>();
+    static HashMap<String,String> details=new HashMap<>();
     EditText name,address,phone,email;
     String name_,address_,phone_,email_;
     Button checko;
@@ -87,7 +87,6 @@ public class CheckOutActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_check_out);
 
-        getCart();
         if(mycart.isEmpty()==true){
             AlertDialog.Builder builder1 = new AlertDialog.Builder(CheckOutActivity.this);
             builder1.setMessage("Please select some items first!");
@@ -125,7 +124,11 @@ public class CheckOutActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
 
+                                GenerateMail generateMail= new GenerateMail();
                                 addToFirebase();
+                                Log.i("Trying to generate mail","Now in Checkout");
+
+                                new GMailSender().execute(details.get("email"),"New Order Placed",generateMail.generate(CheckOutActivity.this,currentFirebaseUser.getUid()),getString(R.string.OwnerEmailId),getString(R.string.OwnerPass));
                                 clearEverything();
                             }
                         });
@@ -214,38 +217,6 @@ public class CheckOutActivity extends AppCompatActivity {
     }
 
 
-    public boolean getCart(){
-        String fname = "cart.txt";
-        File file = new File(getDir("data", MODE_PRIVATE), fname);
-
-        try {
-            if (file.exists()) {
-                ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file));
-                mycart = (HashMap<String, String>) ois.readObject();
-                if(mycart.isEmpty()) {
-                    Log.i("Cart","empty");
-                    return false;
-                }
-                else{
-                    Log.i("Loaded cart ", mycart.toString());
-                    return true;
-                }
-            }
-            else{
-                ObjectOutputStream outputStream = null;
-                outputStream = new ObjectOutputStream(new FileOutputStream(file));
-                outputStream.writeObject(mycart);
-                outputStream.flush();
-                outputStream.close();
-
-                return false;
-            }
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return false;
-        }
-    }
 
     public void addToFirebase(){
         Log.i("Addtofire","called");

@@ -248,7 +248,7 @@ public class ViewCartActivity extends AppCompatActivity {
         return new View.OnClickListener() {
             public void onClick(View v) {
 
-                manageCart.ReduceQty(ViewCartActivity.this,prodId,"1");
+                manageCart.ReduceQty(ViewCartActivity.this,prodId,quantity);
                 linearLayout.removeAllViews();
                 TotalCost=0;
                 displayInLayout();

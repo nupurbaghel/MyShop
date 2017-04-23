@@ -21,11 +21,19 @@
             </intent-filter>
         </activity>
         <activity android:name=".HomeActivity" />
-        <activity android:name=".ScrollActivity" />
+        <activity android:name=".ScrollActivity"
+            android:parentActivityName="com.nupurbaghel.myshop.HomeActivity"
+            />
         <activity android:name=".ProductActivity" />
-        <activity android:name=".ViewCartActivity" />
-        <activity android:name=".CheckOutActivity" />
-        <activity android:name=".AllOrdersActivity" />
+        <activity android:name=".ViewCartActivity"
+            android:parentActivityName="com.nupurbaghel.myshop.HomeActivity"
+            />
+        <activity android:name=".CheckOutActivity"
+            android:parentActivityName="com.nupurbaghel.myshop.HomeActivity"
+            />
+        <activity android:name=".AllOrdersActivity"
+            android:parentActivityName="com.nupurbaghel.myshop.HomeActivity"
+            />
     </application>
 
 </manifest>

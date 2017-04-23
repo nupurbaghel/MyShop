@@ -1,18 +1,11 @@
 package com.nupurbaghel.myshop;
 
-import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -21,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,21 +32,12 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
-import static android.R.attr.actionModeCloseDrawable;
 import static android.R.attr.layout_centerVertical;
 import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
-import static com.nupurbaghel.myshop.HomeActivity.mycart;
 import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class ProductActivity extends AppCompatActivity {
@@ -66,10 +49,8 @@ public class ProductActivity extends AppCompatActivity {
     static String[] prodIds;
     int count;
     Spinner criteria,filter;
-    int pos1,pos2,pos3,pos4,pos5;
     private DrawerLayout mDrawerLayout;
     android.support.v7.app.ActionBarDrawerToggle mDrawerToggle;
-    ActionBar actionBar;
     Toolbar toolbar;
     ManageCart managecart;
 
@@ -88,7 +69,7 @@ public class ProductActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                logoutAlert alertt=new logoutAlert();
+                LogoutAlert alertt=new LogoutAlert();
                 alertt.lA(this);
                 return true;
             case R.id.mycart:
@@ -101,7 +82,7 @@ public class ProductActivity extends AppCompatActivity {
                 return true;
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
-                startActivity(new Intent(ProductActivity.this,AllOrders.class));
+                startActivity(new Intent(ProductActivity.this,AllOrdersActivity.class));
                 return true;
             case R.id.home:
                 startActivity(new Intent(this,HomeActivity.class));
@@ -141,12 +122,10 @@ public class ProductActivity extends AppCompatActivity {
         }
 
         subCategoryNo = getIntent().getIntExtra("subCategoryNo",1);
-        //Log.i("SubcatInProduct", String.valueOf(subCategoryNo));
 
         categoryNo = getIntent().getIntExtra("categoryNo",1);
-        //Log.i("Category No", String.valueOf(categoryNo));
 
-        mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
+        mRef=new Firebase(getString(R.string.firebaseUrl));
         final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -252,10 +231,9 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
     }
+
     private int getIndex(Spinner spinner, String myString){
-
         int index = 0;
-
         for (int i=0;i<spinner.getCount();i++){
             if (spinner.getItemAtPosition(i).equals(myString)){
                 index = i;
@@ -351,8 +329,8 @@ public class ProductActivity extends AppCompatActivity {
 
             name.setText("Product : " +name_);
             company.setText("Company : " +company_);
-            price.setText("Price : "+price_);
-            discount.setText("Discount : "+discount_);
+            price.setText("Price (Rs.) : "+price_);
+            discount.setText("Discount : "+discount_+"%");
             name.setTextColor(Color.BLACK);
             company.setTextColor(Color.BLACK);
             price.setTextColor(Color.BLACK);

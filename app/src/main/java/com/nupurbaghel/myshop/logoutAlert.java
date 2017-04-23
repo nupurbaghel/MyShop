@@ -9,7 +9,7 @@ import android.util.Log;
  * Created by paavini on 21/04/17.
  */
 
-public class logoutAlert {
+public class LogoutAlert {
 
     public void lA(final Context context){
         Log.i("Clicked","logout");

@@ -1,7 +1,5 @@
 package com.nupurbaghel.myshop;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +54,7 @@ public class ViewCartActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                logoutAlert alertt=new logoutAlert();
+                LogoutAlert alertt=new LogoutAlert();
                 alertt.lA(this);
                 return true;
             case  R.id.checkOut:
@@ -67,7 +65,7 @@ public class ViewCartActivity extends AppCompatActivity {
                 return true;
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
-                startActivity(new Intent(ViewCartActivity.this,AllOrders.class));
+                startActivity(new Intent(ViewCartActivity.this,AllOrdersActivity.class));
                 return true;
             default:return false;
         }

@@ -1,23 +1,16 @@
 package com.nupurbaghel.myshop;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,7 +21,6 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.firebase.client.collection.LLRBNode;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,19 +32,12 @@ import java.io.ObjectOutputStream;
 import java.util.Iterator;
 import java.util.Map;
 
-import static android.R.attr.button;
-import static android.R.attr.centerX;
-import static android.R.attr.centerY;
-import static android.R.attr.layout_centerHorizontal;
-import static android.R.attr.layout_centerInParent;
 import static android.R.attr.layout_centerVertical;
-import static android.R.attr.width;
 import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
-import static com.nupurbaghel.myshop.HomeActivity.mycart;
 import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
-public class scrollActivity extends AppCompatActivity {
+public class ScrollActivity extends AppCompatActivity {
 
     LinearLayout linearLayout;
     int count=0;
@@ -74,20 +59,20 @@ public class scrollActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch (item.getItemId()) {
             case R.id.logout:
-                logoutAlert alertt=new logoutAlert();
+                LogoutAlert alertt=new LogoutAlert();
                 alertt.lA(this);
                 return true;
             case R.id.mycart:
                 Log.i("Clicked", "View Cart");
-                startActivity(new Intent(scrollActivity.this, ViewCartActivity.class));
+                startActivity(new Intent(ScrollActivity.this, ViewCartActivity.class));
                 return true;
             case R.id.checkOut:
                 Log.i("Clicked", "Check Cart");
-                startActivity(new Intent(scrollActivity.this, CheckOutActivity.class));
+                startActivity(new Intent(ScrollActivity.this, CheckOutActivity.class));
                 return true;
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
-                startActivity(new Intent(scrollActivity.this,AllOrders.class));
+                startActivity(new Intent(ScrollActivity.this,AllOrdersActivity.class));
                 return true;
             case R.id.home:
                 startActivity(new Intent(this,HomeActivity.class));
@@ -105,7 +90,7 @@ public class scrollActivity extends AppCompatActivity {
         categoryNo = getIntent().getIntExtra("categoryNo",1);
         Log.i("Category No", String.valueOf(categoryNo));
 
-        mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
+        mRef=new Firebase(getString(R.string.firebaseUrl));
         final ValueEventListener valueEventListener2 = mRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -211,11 +196,11 @@ public class scrollActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i("AppDebug","Some subcatclicked");
-                    Intent x= new Intent(scrollActivity.this,ProductActivity.class);
+                    Intent x= new Intent(ScrollActivity.this,ProductActivity.class);
                     Log.i("SubcatInScroll", String.valueOf(finalI));
                     x.putExtra("subCategoryNo",finalI);
                     x.putExtra("categoryNo",categoryNo);
-                    Toast.makeText(scrollActivity.this, "Chose filters from left menu", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ScrollActivity.this, "Chose filters from left menu", Toast.LENGTH_SHORT).show();
                     startActivity(x);
 
                 }
@@ -226,7 +211,7 @@ public class scrollActivity extends AppCompatActivity {
 
     public void Logout(){
         FirebaseAuth.getInstance().signOut();
-        manageCart.clearCart(scrollActivity.this);
+        manageCart.clearCart(ScrollActivity.this);
         details.clear();
         String fname = "def_details.txt";
         File file = new File(getDir("data", MODE_PRIVATE), fname);

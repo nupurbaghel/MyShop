@@ -2,7 +2,6 @@ package com.nupurbaghel.myshop;
 
 
 import android.content.Context;
-import android.util.Log;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,7 +9,7 @@ import java.util.Map;
 import static com.nupurbaghel.myshop.CheckOutActivity.details;
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
-
+import static com.nupurbaghel.myshop.AllOrdersActivity.ordersDB;
 
 public class GenerateMail {
     float TotalCost=0;
@@ -39,15 +38,21 @@ public class GenerateMail {
                 "}\n" +
                 "</style>\n" +
                 "</head>\n" +
-                "<body>\n" +
-                "<p>\n" +
-                " <h2> User Details </h2>"+
+                "<body>\n" ;
+
+        return msg;
+    }
+
+    public String generateOrder(Context context, String Uid, String orderId){
+
+        String msg = generate(context , Uid);
+         msg = msg + "<p>\n" +" <h2> User Details </h2>"+
                 "<b> Name &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;</b> "+details.get("name") +" <br>\n" +
                 "<b> Address : </b>&nbsp;&nbsp;&nbsp; "+ details.get("address") +" <br>\n" +
                 "<b> Email ID &nbsp;&nbsp;: </b>&nbsp; "+ details.get("email") +" <br>\n" +
                 "<b> Contact &nbsp;&nbsp;: </b>&nbsp; "+ details.get("phone") +" <br>\n" +
                 "</p>\n" +
-                "<h2>Order Details</h2><table>\n" +
+                "<h2>Order Details : "+orderId+"</h2><table>\n" +
                 "  <tr>\n" +
                 "    <th>S.No</th>\n" +
                 "    <th>Product Name</th>\n" +
@@ -87,14 +92,11 @@ public class GenerateMail {
                 "    <th></th>\n" +
                 "    <th></th>\n" +
                 "<th>Grand Total</th><th> Rs "+ Float.toString(TotalCost) +" </th></tr>\n" +
-                "</table>\n" +
-                "</body>\n" +
+                "</table>\n" + "</body>\n" +
                 "</html>\n" ;
 
         return msg;
     }
-
-
     public String findCost(String price,String discount, String quantity){
         float Price = Float.parseFloat(price);
         float Discount = Float.parseFloat(discount);
@@ -104,4 +106,17 @@ public class GenerateMail {
         return Float.toString(cost);
     }
 
+    public String generateOrderCancel(Context context, String Uid,String orderid){
+        String msg= generate(context,Uid);
+        msg = msg +" <h2> Order Cancelled </h2> "
+                +"<b> Order Id : </b> "+ orderid +"<br>"
+                +"<b>Name : </b>"+ordersDB.get(orderid).get("name") +"<br>"
+                +"<b>Email : </b>"+ordersDB.get(orderid).get("email") +"<br>"
+                +"<b>Address : </b>"+ordersDB.get(orderid).get("address") +"<br>"
+                +"<b>Date : </b>"+ordersDB.get(orderid).get("dateTime") + "<br>"
+                 ;
+        msg= msg+ "</body>\n" +
+                "</html>\n" ;
+        return msg;
+    }
 }

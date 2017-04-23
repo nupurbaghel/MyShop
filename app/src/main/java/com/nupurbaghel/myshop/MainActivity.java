@@ -1,24 +1,17 @@
 package com.nupurbaghel.myshop;
 
-import android.app.AlertDialog;
+
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v4.text.TextUtilsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -28,15 +21,14 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
 
     EditText emailText;
-    static String userId;
     EditText passwordText;
     Button signup;
     Button register;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-    String TAG= "Mymsg ";
+    String TAG = "Mymsg";
     private ProgressDialog progressDialog;
-    private Firebase mRef;
+
 
     @Override
     public void onBackPressed() {
@@ -49,23 +41,20 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         emailText= (EditText)findViewById(R.id.emailText);
         passwordText=(EditText)findViewById(R.id.passwordText);
-
-
-
         signup=(Button)findViewById(R.id.signupbutton);
         register=(Button) findViewById(R.id.registerButton);
         progressDialog=new ProgressDialog(this);
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("AppDebug","Register clicked");
+                Log.i(TAG,"Register clicked");
                 startRegister();
             }
         });
         signup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.i("AppDebug","SignUp clicked");
+                Log.i(TAG,"SignUp clicked");
                 startSignIn();
             }
         });
@@ -84,8 +73,7 @@ public class MainActivity extends AppCompatActivity {
                     // User is signed out
                     Log.i(TAG, "onAuthStateChanged:signed_out");
                 }
-                // ...
-            }
+             }
         };
     }
 
@@ -131,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.cancel();
                         Log.e(TAG, "Sign-in Failed: " + task.getException().getMessage());
                         String temp=task.getException().getMessage();
-                        Log.i("Hello2",temp);
+
                         if(temp.indexOf("no user record corresponding to this identifier") != -1){
                             String display = "No such user found. Register first";
                             Toast.makeText(MainActivity.this, display, Toast.LENGTH_LONG).show();
@@ -179,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                         progressDialog.cancel();
                         Log.e(TAG, "Register Failed: " + task.getException().getMessage());
                         String temp=task.getException().getMessage();
-                        Log.i("Hello2",temp);
+
                         if(temp.indexOf("WEAK_PASSWORD") != -1){
                             String display = "Password must consist of atleast 6 characters";
                             Toast.makeText(MainActivity.this, display, Toast.LENGTH_LONG).show();

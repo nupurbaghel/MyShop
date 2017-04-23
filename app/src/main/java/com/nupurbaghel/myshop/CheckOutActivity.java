@@ -14,14 +14,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import com.firebase.client.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -35,7 +33,6 @@ import java.util.Map;
 
 import static com.nupurbaghel.myshop.HomeActivity.map;
 import static com.nupurbaghel.myshop.HomeActivity.mycart;
-import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class CheckOutActivity extends AppCompatActivity {
     static HashMap<String,String> details=new HashMap<>();
@@ -61,7 +58,7 @@ public class CheckOutActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                logoutAlert alertt=new logoutAlert();
+                LogoutAlert alertt=new LogoutAlert();
                 alertt.lA(this);
                 return true;
             case R.id.mycart:
@@ -74,7 +71,7 @@ public class CheckOutActivity extends AppCompatActivity {
                 return true;
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
-                startActivity(new Intent(CheckOutActivity.this,AllOrders.class));
+                startActivity(new Intent(CheckOutActivity.this,AllOrdersActivity.class));
                 return true;
             case R.id.home:
                 startActivity(new Intent(this,HomeActivity.class));
@@ -127,10 +124,10 @@ public class CheckOutActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
 
                                 GenerateMail generateMail= new GenerateMail();
-                                addToFirebase();
+                                String orderId = addToFirebase();
                                 Log.i("Trying to generate mail","Now in Checkout");
 
-                                new GMailSender().execute(details.get("email"),"New Order Placed",generateMail.generate(CheckOutActivity.this,currentFirebaseUser.getUid()),getString(R.string.OwnerEmailId),getString(R.string.OwnerPass));
+                                new GMailSender().execute(details.get("email"),"New Order Placed",generateMail.generateOrder(CheckOutActivity.this,currentFirebaseUser.getUid(),orderId),getString(R.string.OwnerEmailId),getString(R.string.OwnerPass));
                                 clearEverything();
                             }
                         });
@@ -221,9 +218,9 @@ public class CheckOutActivity extends AppCompatActivity {
 
 
 
-    public void addToFirebase(){
+    public String addToFirebase(){
         Log.i("Addtofire","called");
-        mref2 = new Firebase("https://my-shop-93286.firebaseio.com/orders");
+        mref2 = new Firebase(getString(R.string.firebaseUrl)+"/orders");
         name_=name.getText().toString();
         address_=address.getText().toString();
         email_=email.getText().toString();
@@ -261,8 +258,13 @@ public class CheckOutActivity extends AppCompatActivity {
         mymap.put("dateTime",currentDateTimeString);
         mymap.put("status","Processing");
 
-        mref2.push().setValue(mymap);
-        Log.i("Addtofire","ended");
+
+        Firebase orderRef = mref2.push();
+        orderRef.setValue(mymap);
+        String orderId = orderRef.getKey();
+
+        Log.i("Addtofire","OrderId :"+orderId);
+        return orderId;
 
     }
 

@@ -1,8 +1,6 @@
 package com.nupurbaghel.myshop;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
@@ -16,10 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridLayout;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -28,23 +24,12 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.firebase.ui.storage.images.FirebaseImageLoader;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import static android.R.attr.button;
-import static com.nupurbaghel.myshop.CheckOutActivity.details;
-import static com.nupurbaghel.myshop.R.id.gridLayout;
-import static com.nupurbaghel.myshop.R.id.linearLayout;
-import static com.nupurbaghel.myshop.HomeActivity.mycart;
-import static com.nupurbaghel.myshop.ViewCartActivity.manageCart;
 
 public class HomeActivity extends AppCompatActivity {
     int count = 0;
@@ -70,7 +55,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onOptionsItemSelected(item);
         switch(item.getItemId()){
             case R.id.logout:
-                logoutAlert alertt=new logoutAlert();
+                LogoutAlert alertt=new LogoutAlert();
                 alertt.lA(this);
                 return true;
             case R.id.mycart:
@@ -83,7 +68,7 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
             case R.id.allOrders:
                 Log.i("Clicked","All orders");
-                startActivity(new Intent(HomeActivity.this,AllOrders.class));
+                startActivity(new Intent(HomeActivity.this,AllOrdersActivity.class));
                 return true;
             default:return false;
         }
@@ -104,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
 
         gridLayout=(GridLayout) findViewById(R.id.gridLayout);
         gridLayout.removeAllViews();
-        mRef=new Firebase("https://my-shop-93286.firebaseio.com/");
+        mRef=new Firebase(getString(R.string.firebaseUrl));
 
         final ValueEventListener valueEventListener = mRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -124,7 +109,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void callScrollActivity(View view){
-        startActivity(new Intent(this,scrollActivity.class));
+        startActivity(new Intent(this,ScrollActivity.class));
     }
 
     public void findCount(DataSnapshot dataSnapshot){
@@ -203,7 +188,7 @@ public class HomeActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Log.i("AppDebug","button clicked");
-                    Intent x= new Intent(HomeActivity.this,scrollActivity.class);
+                    Intent x= new Intent(HomeActivity.this,ScrollActivity.class);
                     Log.i("ButtonHome", String.valueOf(finalI));
                     x.putExtra("categoryNo",finalI);
                     startActivity(x);

@@ -170,6 +170,10 @@ public class ProductActivity extends AppCompatActivity {
         filter= (Spinner)findViewById(R.id.filter);
         findCount();
 
+        final Button subcriteria =(Button)findViewById(R.id.subcriteria);
+        subcriteria.setVisibility(View.INVISIBLE);
+        filter.setVisibility(View.INVISIBLE);
+
         //set adapters for all spinners
         final FilterClass filterClass= new FilterClass();
         criteria.setAdapter(filterClass.CreateAdapter(this,"criteria"));
@@ -179,7 +183,11 @@ public class ProductActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selected= (String) criteria.getItemAtPosition(position);
                 if(selected.equals("Chose Color")||selected.equals("Chose Make")||selected.equals("Chose Material")){
+
+                    subcriteria.setVisibility(View.VISIBLE);
+                    filter.setVisibility(View.VISIBLE);
                     create_filter(selected);
+                    filter.performClick();
                 }
                 else{
                     if(selected.equals("Highest Discount First")){
@@ -272,8 +280,10 @@ public class ProductActivity extends AppCompatActivity {
             Log.i("Printing image url",imageURL);
             ImageView iv = new ImageView(getApplicationContext());
             float width = getResources().getDimension(R.dimen.chart_width);
-            iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
-            Glide.with(this )
+            LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams((int) width, (int) width);
+            layoutParams.gravity= Gravity.CENTER;
+            iv.setLayoutParams(layoutParams);
+            Glide.with(getApplicationContext())
                     .using(new FirebaseImageLoader())
                     .load(imagesRef)
                     .into(iv);

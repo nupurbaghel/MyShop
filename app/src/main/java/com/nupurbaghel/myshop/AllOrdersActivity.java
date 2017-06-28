@@ -149,7 +149,7 @@ public class AllOrdersActivity extends AppCompatActivity {
                 tv2.setText("Date and Time of order : " + ordersDB.get(orders.getKey()).get("dateTime"));
                 tv3.setText("Net total : Rs." + ordersDB.get(orders.getKey()).get("netPrice"));
                 tv6.setText("Status : "+ status);
-                Log.i("Status",status);
+                //Log.i("Status",status);
                 layout2.addView(tv1);
 
                 prodIds=ordersDB.get(orders.getKey()).get("prodNos").split(",");

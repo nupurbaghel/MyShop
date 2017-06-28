@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -75,8 +76,41 @@ public class MainActivity extends AppCompatActivity {
                 }
              }
         };
+
+        TextView forgetTextView= (TextView) findViewById(R.id.forgetPass);
+        forgetTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = emailText.getText().toString();
+                if(email.isEmpty()){
+                    Toast.makeText(MainActivity.this, "Enter email id", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    progressDialog.setMessage("Sending Mail...");
+                    progressDialog.show();
+                    resetMail(email);
+                }
+            }
+        });
     }
 
+    public void resetMail(String emailAddress){
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        auth.sendPasswordResetEmail(emailAddress)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        progressDialog.cancel();
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Email sent.");
+                            Toast.makeText(MainActivity.this, "Email Sent Successfully!", Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(MainActivity.this, "There was a problem in sending email, try again later...", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
     @Override
     public void onStart() {
         super.onStart();

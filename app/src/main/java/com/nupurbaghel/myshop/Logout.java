@@ -2,6 +2,7 @@ package com.nupurbaghel.myshop;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -17,8 +18,15 @@ public class Logout {
 
     public void logout(Context context){
         FirebaseAuth.getInstance().signOut();
-        manageCart.clearCart(context);
-        details.clear();
+        try {
+            manageCart.clearCart(context);
+            details.clear();
+        }
+        catch(Exception e){
+            Log.i("error","Trying to clear empty cart");
+            e.printStackTrace();
+        }
+
         String fname = "def_details.txt";
         File file = new File(context.getDir("data", MODE_PRIVATE), fname);
         try {

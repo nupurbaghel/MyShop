@@ -112,7 +112,8 @@ public class CheckOutActivity extends AppCompatActivity {
         phone=(EditText) findViewById(R.id.phone);
         checko=(Button) findViewById(R.id.checko);
 
-        getDefault(name,address,email,phone);
+        if(!getDefault(name,address,email,phone))
+            email.setText(FirebaseAuth.getInstance().getCurrentUser().getEmail());
         currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser() ;
 
         checko.setOnClickListener(new View.OnClickListener() {

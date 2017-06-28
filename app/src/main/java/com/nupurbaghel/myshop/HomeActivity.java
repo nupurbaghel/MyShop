@@ -156,6 +156,7 @@ public class HomeActivity extends AppCompatActivity {
 
             parent.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
             parent.setOrientation(LinearLayout.VERTICAL);
+            Log.i("image url",map.get("category").get(Integer.toString(i)).toString());
             String imageURL=map.get("category").get(Integer.toString(i)).get("img");
 
             imagesRef = storageRef.child(imageURL);
@@ -167,7 +168,7 @@ public class HomeActivity extends AppCompatActivity {
             iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
             iv.setPadding((int)paading,(int)paading,(int)paading,(int)paading);
 
-            Glide.with(getApplicationContext() /* context */)
+            Glide.with(getApplicationContext())
                     .using(new FirebaseImageLoader())
                     .load(imagesRef)
                     .into(iv);

@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -165,9 +166,11 @@ public class ScrollActivity extends AppCompatActivity {
             layout2.setOrientation(LinearLayout.VERTICAL);
 
             float width = getResources().getDimension(R.dimen.chart_width);
-            iv.setLayoutParams(new ViewGroup.LayoutParams((int) width, (int) width));
+            LinearLayout.LayoutParams layoutParams= new LinearLayout.LayoutParams((int) width, (int) width);
+            layoutParams.gravity= Gravity.CENTER;
+            iv.setLayoutParams(layoutParams);
 
-            Glide.with(this /* context */)
+            Glide.with(getApplicationContext())
                     .using(new FirebaseImageLoader())
                     .load(imagesRef)
                     .into(iv);

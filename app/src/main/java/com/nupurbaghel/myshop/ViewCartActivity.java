@@ -2,11 +2,14 @@ package com.nupurbaghel.myshop;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,6 +42,7 @@ public class ViewCartActivity extends AppCompatActivity {
     static ManageCart manageCart;
     String netprice;
     float TotalCost;
+    Button fab;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -102,6 +106,16 @@ public class ViewCartActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_cart);
         linearLayout= (LinearLayout)findViewById(R.id.linearLayout);
         TotalCost=0;
+
+        fab=  (Button) findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // Click action
+                Intent intent = new Intent(ViewCartActivity.this, CheckOutActivity.class);
+                startActivity(intent);
+            }
+        });
 
         if(getCart()){
             displayInLayout();
@@ -192,11 +206,13 @@ public class ViewCartActivity extends AppCompatActivity {
 
             Button btn1 = new Button(getApplicationContext());
             Button btn2 = new Button(getApplicationContext());
-            btn1.setLayoutParams(new ViewGroup.LayoutParams((int) width,(int) width/3));
-            btn2.setLayoutParams(new ViewGroup.LayoutParams((int) width,(int) width/3));
+            LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams((int) width,(int) width/3);
+            layoutParams.gravity= Gravity.CENTER;
+            btn1.setLayoutParams(layoutParams);
+            btn2.setLayoutParams(layoutParams);
 
-            btn1.setText("Add +1 Qty");
-            btn2.setText("Remove -1 Qty");
+            btn1.setText("Add Qty (+1)");
+            btn2.setText("Remove Qty (-1)");
             btn1.setOnClickListener(AddToCart(btn1, (String)cartItem.getKey(),quantity));
             btn2.setOnClickListener(RemoveFromCart(btn2,(String)cartItem.getKey(),quantity));
             layout2.addView(tv1);
@@ -219,11 +235,16 @@ public class ViewCartActivity extends AppCompatActivity {
     public void displayTotal(){
         TextView tv1= new TextView(getApplicationContext());
         if(TotalCost!=0) {
-            tv1.setText("Total Price: Rs " + Float.toString(TotalCost)+ "/-");
+            tv1.setText("  Total Price: Rs " + Float.toString(TotalCost)+ "/-");
+            fab.setVisibility(View.VISIBLE);
         }
         else{
             tv1.setText("Cart is empty!!");
+            fab.setVisibility(View.INVISIBLE);
         }
+        LinearLayout.LayoutParams layoutParams =new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        layoutParams.setMargins(0,50,0,0);
+        tv1.setLayoutParams(layoutParams);
         tv1.setTextSize(30);
         tv1.setTextColor(Color.BLACK);
         linearLayout.addView(tv1);

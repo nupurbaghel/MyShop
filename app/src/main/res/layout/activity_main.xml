@@ -60,4 +60,15 @@
         android:layout_toEndOf="@+id/signupbutton"
         android:layout_marginStart="53dp"
         android:id="@+id/registerButton" />
+
+    <TextView
+        android:text="Forget Password? Click here to send reset mail..."
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:id="@+id/forgetPass"
+        android:textColor="@color/blue"
+        android:textStyle="italic"
+        android:layout_below="@+id/passwordText"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
